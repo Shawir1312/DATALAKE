@@ -1016,7 +1016,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
 
 
                                 <!-- Real QR Code with Data Lake Logo in Center -->
-                                <div onclick="window.open('/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2026','_blank')" style="cursor:pointer; display:inline-block; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:transform 0.2s;" title="Scan QR / klik untuk verifikasi keaslian dokumen di database">
+                                <div onclick="window.open('/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2025','_blank')" style="cursor:pointer; display:inline-block; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:transform 0.2s;" title="Scan QR / klik untuk verifikasi keaslian dokumen di database">
                                     <div style="position:relative; width:120px; height:120px; margin:0 auto;">
                                         <canvas id="qrcode-pihak1" style="width:120px;height:120px;"></canvas>
                                         <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:26px; height:26px; background:#ffffff; border-radius:50%; border:1.5px solid #0099cc; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.18); padding:2px;">
@@ -1026,13 +1026,6 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                                     <div style="font-size:9px; color:#0284c7; font-family:monospace; font-weight:700; margin-top:4px; letter-spacing:0.5px;">
                                         082/PKS/DLI-NIS/02/2025
                                     </div>
-                                </div>
-
-                                <div style="margin-top:8px;">
-                                    <a href="/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2025" target="_blank" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
-                                        <span class="material-symbols-outlined" style="font-size:14px;">verified</span>
-                                        Cek Keaslian Dokumen Database
-                                    </a>
                                 </div>
 
                                 <div style="margin-top:14px; font-weight:800; font-size:14.5px; color:#07162c; text-decoration:underline;">
@@ -1062,19 +1055,28 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                                     </div>
                                 </div>
 
-                                <div style="margin-top:8px;">
-                                    <a href="/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2025" target="_blank" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
-                                        <span class="material-symbols-outlined" style="font-size:14px;">verified</span>
-                                        Cek Keaslian Dokumen Database
-                                    </a>
-                                </div>
-
                                 <div style="margin-top:14px; font-weight:800; font-size:14.5px; color:#07162c; text-decoration:underline;">
                                     Mushawir Odegoa
                                 </div>
                                 <div style="font-size:12.5px; color:#64748b; font-weight:600;">
                                     Direktur
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Sudut Bawah Dokumen PKS: Cek Keaslian Dokumen Database -->
+                        <div style="margin-top:30px; padding-top:14px; border-top:1px dashed #cbd5e1; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                            <div style="font-size:11px; color:#64748b; line-height:1.5;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="material-symbols-outlined" style="font-size:15px; color:#0284c7;">verified_user</span>
+                                    <span>Integritas Dokumen Terenkripsi &amp; Terarsip Resmi di Pangkalan Data PT Data Lake Indonesia</span>
+                                </div>
+                            </div>
+                            <div style="text-align:right;">
+                                <a href="https://datalakeindonesia.com/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2025" target="_blank" style="font-size:11.5px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:5px; background:#ecfdf5; padding:6px 14px; border-radius:6px; border:1px solid #a7f3d0; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+                                    <span class="material-symbols-outlined" style="font-size:16px; color:#10b981;">verified</span>
+                                    Cek Keaslian Dokumen Database
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1936,7 +1938,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
     <script>
     (function generatePKSQRCodes() {
         // Verification URL encoded in the QR code - opens public audit page
-        var verifyUrl = window.location.protocol + '//' + window.location.host + '/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2026';
+        var verifyUrl = window.location.protocol + '//' + window.location.host + '/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2025';
 
         if (typeof QRCode === 'undefined') {
             console.warn('QRCode library not loaded');
