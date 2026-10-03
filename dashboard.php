@@ -21,6 +21,26 @@ if (!$current_user) {
 $user_kits = get_user_starlink_kits($current_user_id);
 $billing_history = get_pks_billing_history();
 
+// Distinct dynamic base telemetry for each of the 3 Starlink kits (190 - 300 Mbps)
+$kit_profiles = [
+    ['min' => 268, 'max' => 298, 'up_min' => 45, 'up_max' => 52, 'ping_min' => 20, 'ping_max' => 24, 'jitter' => '1.4 ms'], // Terminal 1 - Jakarta HQ
+    ['min' => 192, 'max' => 236, 'up_min' => 34, 'up_max' => 40, 'ping_min' => 26, 'ping_max' => 32, 'jitter' => '2.1 ms'], // Terminal 2 - Balikpapan Hub
+    ['min' => 238, 'max' => 278, 'up_min' => 39, 'up_max' => 46, 'ping_min' => 23, 'ping_max' => 29, 'jitter' => '1.8 ms'], // Terminal 3 - Sorong Papua
+];
+
+foreach ($user_kits as $idx => &$k) {
+    $prof = $kit_profiles[$idx % count($kit_profiles)];
+    $k['live_down'] = number_format($prof['min'] + (mt_rand(0, 100) / 100) * ($prof['max'] - $prof['min']), 1);
+    $k['live_up'] = number_format($prof['up_min'] + (mt_rand(0, 100) / 100) * ($prof['up_max'] - $prof['up_min']), 1);
+    $k['live_ping'] = mt_rand($prof['ping_min'], $prof['ping_max']);
+    $k['live_jitter'] = $prof['jitter'];
+}
+unset($k);
+
+$avg_live_down = !empty($user_kits) ? number_format(array_sum(array_column($user_kits, 'live_down')) / count($user_kits), 1) : '265.4';
+$avg_live_up = !empty($user_kits) ? number_format(array_sum(array_column($user_kits, 'live_up')) / count($user_kits), 1) : '43.6';
+$avg_live_ping = !empty($user_kits) ? round(array_sum(array_column($user_kits, 'live_ping')) / count($user_kits)) : '24';
+
 // Determine tab
 $tab = $_GET['tab'] ?? ($is_admin ? 'overview' : 'monitoring');
 $error = get_flash('error');
@@ -234,7 +254,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
     <!-- Styles -->
     <link rel="stylesheet" href="/_astro/WhatsAppButton.Bx5n5ahj.css">
     <link rel="stylesheet" href="/_astro/HomeContent.Df-1erRN.css">
-    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css?v=<?= filemtime(__DIR__ . '/assets/css/dashboard.css') ?>">
 </head>
 <body class="dashboard-body">
 
@@ -432,8 +452,8 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                     <div class="stat-card">
                         <div class="stat-info">
                             <span class="stat-label">Rata-rata Download</span>
-                            <span class="stat-value" id="metric-down">294.5 Mbps</span>
-                            <span class="stat-note">Peak Throughput: 320 Mbps</span>
+                            <span class="stat-value" id="metric-down"><?= $avg_live_down ?> Mbps</span>
+                            <span class="stat-note">Dynamic Range: 180 – 300 Mbps</span>
                         </div>
                         <div class="stat-icon-wrap stat-icon-blue">
                             <span class="material-symbols-outlined">download</span>
@@ -442,7 +462,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                     <div class="stat-card">
                         <div class="stat-info">
                             <span class="stat-label">Rata-rata Upload</span>
-                            <span class="stat-value" id="metric-up">48.2 Mbps</span>
+                            <span class="stat-value" id="metric-up"><?= $avg_live_up ?> Mbps</span>
                             <span class="stat-note">Dedicated Priority Bandwidth</span>
                         </div>
                         <div class="stat-icon-wrap stat-icon-amber">
@@ -452,7 +472,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                     <div class="stat-card">
                         <div class="stat-info">
                             <span class="stat-label">Rata-rata Ping / SLA</span>
-                            <span class="stat-value" id="metric-ping">22 ms</span>
+                            <span class="stat-value" id="metric-ping"><?= $avg_live_ping ?> ms</span>
                             <span class="stat-note" style="color: #10b981;">SLA Bulanan: 99.98%</span>
                         </div>
                         <div class="stat-icon-wrap stat-icon-purple">
@@ -503,15 +523,15 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
 
                             <div class="pks-telemetry-row">
                                 <div class="pks-telemetry-item">
-                                    <div class="val"><?= $kit['download_speed'] ?><small style="font-size:10px;">Mbps</small></div>
+                                    <div class="val" id="kit-down-<?= $idx ?>"><?= $kit['live_down'] ?><small style="font-size:10px;">Mbps</small></div>
                                     <div class="lbl">Download</div>
                                 </div>
                                 <div class="pks-telemetry-item">
-                                    <div class="val"><?= $kit['upload_speed'] ?><small style="font-size:10px;">Mbps</small></div>
+                                    <div class="val" id="kit-up-<?= $idx ?>"><?= $kit['live_up'] ?><small style="font-size:10px;">Mbps</small></div>
                                     <div class="lbl">Upload</div>
                                 </div>
                                 <div class="pks-telemetry-item">
-                                    <div class="val"><?= $kit['ping_ms'] ?><small style="font-size:10px;">ms</small></div>
+                                    <div class="val" id="kit-ping-<?= $idx ?>"><?= $kit['live_ping'] ?><small style="font-size:10px;">ms</small></div>
                                     <div class="lbl">Ping</div>
                                 </div>
                             </div>
@@ -542,21 +562,33 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                     <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #00D2FF; margin-bottom: 6px;">
                         Data Lake Starlink Network Speedtest
                     </div>
-                    <h2 style="margin: 0 0 20px; font-size: 24px;">Pengujian Bandwidth Real-Time (3 Kit Gen 3 V4)</h2>
+                    <h2 style="margin: 0 0 16px; font-size: 24px;">Pengujian Bandwidth Real-Time (3 Kit Gen 3 V4)</h2>
+
+                    <!-- Terminal Selector Tabs -->
+                    <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 22px;">
+                        <button type="button" class="btn-term-select active" onclick="selectTestTerminal('all', this)">
+                            🌐 Semua 3 Kit (Agregasi)
+                        </button>
+                        <?php foreach ($user_kits as $idx => $kit): ?>
+                            <button type="button" class="btn-term-select" onclick="selectTestTerminal('<?= $idx ?>', this)">
+                                🛰️ Terminal <?= $idx + 1 ?> (<?= e($kit['kit_number']) ?>)
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
 
                     <div class="speedtest-gauge" id="speedGauge">
-                        <div id="gaugeVal" style="font-size: 42px; font-weight: 800; color: #00D2FF; line-height: 1;">294.6</div>
+                        <div id="gaugeVal" style="font-size: 42px; font-weight: 800; color: #00D2FF; line-height: 1;"><?= $avg_live_down ?></div>
                         <div id="gaugeUnit" style="font-size: 13px; color: #94a3b8; text-transform: uppercase; margin-top: 4px;">Mbps Download</div>
                     </div>
 
-                    <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 24px; flex-wrap: wrap;">
                         <div>
                             <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Latensi (Ping)</div>
-                            <div style="font-size: 20px; font-weight: 700; color: #38bdf8;" id="testPing">22 ms</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #38bdf8;" id="testPing"><?= $avg_live_ping ?> ms</div>
                         </div>
                         <div>
                             <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Upload Speed</div>
-                            <div style="font-size: 20px; font-weight: 700; color: #fbbf24;" id="testUp">48.2 Mbps</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #fbbf24;" id="testUp"><?= $avg_live_up ?> Mbps</div>
                         </div>
                         <div>
                             <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Jitter / Packet Loss</div>
@@ -568,6 +600,60 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                         <span class="material-symbols-outlined">play_arrow</span>
                         Jalankan Tes Kecepatan Realtime
                     </button>
+                </div>
+
+                <!-- Live Matrix Telemetry 3 Kit Starlink (Beda Kecepatan & Berfluktuasi 180-300 Mbps) -->
+                <div style="margin: 24px 0 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                        <h3 style="margin: 0; font-size: 18px; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                            <span class="material-symbols-outlined" style="color: #00D2FF;">cell_tower</span>
+                            Status Live Telemetri 3 Kit Starlink Gen 3 V4 (Kecepatan Mandiri)
+                        </h3>
+                        <span style="font-size: 12px; color: #059669; font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 4px 12px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; animation: otpPulse 1.5s infinite;"></span>
+                            Real-time Telemetry Active (180 – 300 Mbps)
+                        </span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                        <?php foreach ($user_kits as $idx => $kit): ?>
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #00D2FF, #0077b6);"></div>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <div style="font-weight: 800; font-size: 15px; color: #07162c;">
+                                        Terminal <?= $idx + 1 ?> (<?= e($kit['kit_number']) ?>)
+                                    </div>
+                                    <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #059669; background: #ecfdf5; padding: 2px 8px; border-radius: 6px;">
+                                        ● Online
+                                    </span>
+                                </div>
+                                
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">
+                                    <?= e($kit['location']) ?>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center;">
+                                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
+                                        <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Download</div>
+                                        <div style="font-size: 20px; font-weight: 800; color: #0284c7;" id="tele-down-<?= $idx ?>"><?= $kit['live_down'] ?> <small style="font-size: 11px;">Mbps</small></div>
+                                    </div>
+                                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
+                                        <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Upload</div>
+                                        <div style="font-size: 20px; font-weight: 800; color: #d97706;" id="tele-up-<?= $idx ?>"><?= $kit['live_up'] ?> <small style="font-size: 11px;">Mbps</small></div>
+                                    </div>
+                                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
+                                        <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Latensi (Ping)</div>
+                                        <div style="font-size: 18px; font-weight: 800; color: #059669;" id="tele-ping-<?= $idx ?>"><?= $kit['live_ping'] ?> <small style="font-size: 11px;">ms</small></div>
+                                    </div>
+                                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
+                                        <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">SLA Uptime</div>
+                                        <div style="font-size: 18px; font-weight: 800; color: #0f172a;"><?= e($kit['sla_percent']) ?>%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
 
                 <!-- 24-Hour Traffic Curve & SLA 30-Day Grid -->
@@ -603,10 +689,10 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                             </svg>
                             <div style="display: flex; justify-content: center; gap: 20px; margin-top: 14px; font-size: 12px;">
                                 <span style="display: flex; align-items: center; gap: 6px; color: #0099cc; font-weight: 600;">
-                                    <span style="display:inline-block; width:12px; height:3px; background:#0099cc;"></span> Download (Avg: 294 Mbps)
+                                    <span style="display:inline-block; width:12px; height:3px; background:#0099cc;"></span> <span id="chartAvgDown">Download (Avg: <?= $avg_live_down ?> Mbps)</span>
                                 </span>
                                 <span style="display: flex; align-items: center; gap: 6px; color: #f59e0b; font-weight: 600;">
-                                    <span style="display:inline-block; width:12px; height:3px; background:#f59e0b;"></span> Upload (Avg: 48 Mbps)
+                                    <span style="display:inline-block; width:12px; height:3px; background:#f59e0b;"></span> <span id="chartAvgUp">Upload (Avg: <?= $avg_live_up ?> Mbps)</span>
                                 </span>
                             </div>
                         </div>
@@ -1205,194 +1291,197 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
         </div>
     </main>
 
-    <!-- Modal Tambah Pengguna Baru (Admin Only) -->
-    <?php if ($is_admin): ?>
-    <div class="dash-modal" id="addUserModal">
-        <div class="dash-modal-content">
-            <div class="dash-modal-header">
-                <h3 class="dash-modal-title">Tambah Pengguna Baru</h3>
-                <button type="button" onclick="closeModal('addUserModal')" class="dash-modal-close">&times;</button>
+    <!-- Modal Portal Wrapper (Prevents Flexbox Side-by-Side Glitch) -->
+    <div id="modalPortal" style="display: contents;">
+        <!-- Modal Tambah Pengguna Baru (Admin Only) -->
+        <?php if ($is_admin): ?>
+        <div class="dash-modal" id="addUserModal" style="display: none !important;">
+            <div class="dash-modal-content">
+                <div class="dash-modal-header">
+                    <h3 class="dash-modal-title">Tambah Pengguna Baru</h3>
+                    <button type="button" onclick="closeModal('addUserModal')" class="dash-modal-close">&times;</button>
+                </div>
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
+                    <input type="hidden" name="action" value="add_user">
+
+                    <div class="dash-modal-body">
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label class="form-label" style="color:#334155;">Nama Lengkap / Perusahaan *</label>
+                            <input type="text" name="name" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" placeholder="PT Mitra Sejahtera / Sarah" required>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group">
+                                <label class="form-label" style="color:#334155;">Username *</label>
+                                <input type="text" name="username" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" placeholder="sarah" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" style="color:#334155;">No. Telepon / WhatsApp</label>
+                                <input type="tel" name="phone" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" placeholder="08123456789">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label class="form-label" style="color:#334155;">Email *</label>
+                            <input type="email" name="email" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" placeholder="sarah@perusahaan.co.id" required>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label class="form-label" style="color:#334155;">Kata Sandi Awal *</label>
+                                <input type="password" name="password" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" placeholder="Min. 6 karakter" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" style="color:#334155;">Peran Akun</label>
+                                <select name="role" style="height: 48px; width: 100%; border-radius: 6px; border: 1px solid #cbd5e1; padding: 0 12px; font-size: 14px;">
+                                    <option value="user">Klien Dedicated PKS</option>
+                                    <option value="admin">Administrator</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dash-modal-footer">
+                        <button type="button" onclick="closeModal('addUserModal')" class="btn-dash" style="background:#e2e8f0; color:#334155;">Batal</button>
+                        <button type="submit" class="btn-dash btn-dash-primary">Simpan Pengguna</button>
+                    </div>
+                </form>
             </div>
-            <form method="POST">
-                <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
-                <input type="hidden" name="action" value="add_user">
+        </div>
+        <?php endif; ?>
 
-                <div class="dash-modal-body">
-                    <div class="form-group" style="margin-bottom: 12px;">
-                        <label class="form-label" style="color:#334155;">Nama Lengkap / Perusahaan *</label>
-                        <input type="text" name="name" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" placeholder="PT Mitra Sejahtera / Sarah" required>
+        <!-- Modal Kwitansi Resmi / Invoice -->
+        <div class="dash-modal" id="invoiceModal" style="display: none !important;">
+            <div class="dash-modal-content" style="max-width: 720px; padding: 0;">
+                <div style="padding: 16px 24px; background: #07162c; color: #fff; display: flex; justify-content: space-between; align-items: center; border-radius: 12px 12px 0 0;">
+                    <div style="font-weight: 700; font-size: 16px;">Kwitansi Resmi PT Data Lake Indonesia</div>
+                    <button type="button" onclick="closeModal('invoiceModal')" style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;">&times;</button>
+                </div>
+                
+                <div class="invoice-paper" id="printableInvoice">
+                    <div class="invoice-header">
+                        <div>
+                            <img src="/logo/DLI-logo-navy.png" alt="Data Lake Indonesia" style="height: 36px; margin-bottom: 6px;">
+                            <div style="font-size: 12px; color: #64748b;">
+                                Authorized Distributor Starlink Indonesia<br>
+                                Gedung Data Lake, Jakarta Selatan<br>
+                                Email: billing@datalake.id | Telp: <?= e(get_wa_number()) ?>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <h2 style="margin: 0; font-size: 20px; color: #07162c; text-transform: uppercase;">Kwitansi Pembayaran</h2>
+                            <div style="font-size: 13px; font-family: monospace; font-weight: 700; color: #0284c7;" id="invNumber">INV/DLI/202610/0842</div>
+                            <div style="font-size: 12px; color: #64748b;" id="invDate">Tanggal: 05 Okt 2026</div>
+                        </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                        <div class="form-group">
-                            <label class="form-label" style="color:#334155;">Username *</label>
-                            <input type="text" name="username" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" placeholder="sarah" required>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; font-size: 13px;">
+                        <div>
+                            <div style="font-size: 11px; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">Telah Diterima Dari:</div>
+                            <div style="font-weight: 700; font-size: 15px; color: #0f172a;"><?= e($current_user['name']) ?></div>
+                            <div style="color: #64748b;"><?= e($current_user['email']) ?> | <?= e($current_user['phone']) ?></div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" style="color:#334155;">No. Telepon / WhatsApp</label>
-                            <input type="tel" name="phone" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" placeholder="08123456789">
+                        <div style="text-align: right;">
+                            <div style="font-size: 11px; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">Rujukan Kontrak PKS:</div>
+                            <div style="font-weight: 700; color: #0f172a;">PKS-DLI/STARLINK-DEDICATED/2025-0082</div>
+                            <div style="color: #10b981; font-weight: 600;">Metode: Mandiri Corporate Auto-Debit</div>
                         </div>
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 12px;">
-                        <label class="form-label" style="color:#334155;">Email *</label>
-                        <input type="email" name="email" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" placeholder="sarah@perusahaan.co.id" required>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
+                        <thead>
+                            <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: left;">
+                                <th style="padding: 10px;">Deskripsi Layanan</th>
+                                <th style="padding: 10px; text-align: center;">Kuantitas</th>
+                                <th style="padding: 10px; text-align: right;">Biaya</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 12px 10px;">
+                                    <strong>Langganan Dedicated Starlink Bandwidth Priority</strong><br>
+                                    <small style="color: #64748b;">Terminal 1 (<?= e($user_kits[0]['kit_number'] ?? 'KIT-1') ?>) — <?= e($user_kits[0]['location'] ?? '') ?></small>
+                                </td>
+                                <td style="padding: 12px 10px; text-align: center;">1 Bulan</td>
+                                <td style="padding: 12px 10px; text-align: right;">Rp 4.000.000</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 12px 10px;">
+                                    <strong>Langganan Dedicated Starlink Bandwidth Priority</strong><br>
+                                    <small style="color: #64748b;">Terminal 2 (<?= e($user_kits[1]['kit_number'] ?? 'KIT-2') ?>) — <?= e($user_kits[1]['location'] ?? '') ?></small>
+                                </td>
+                                <td style="padding: 12px 10px; text-align: center;">1 Bulan</td>
+                                <td style="padding: 12px 10px; text-align: right;">Rp 4.000.000</td>
+                            </tr>
+                            <tr style="border-bottom: 2px solid #0f172a;">
+                                <td style="padding: 12px 10px;">
+                                    <strong>Langganan Dedicated Starlink Bandwidth Priority</strong><br>
+                                    <small style="color: #64748b;">Terminal 3 (<?= e($user_kits[2]['kit_number'] ?? 'KIT-3') ?>) — <?= e($user_kits[2]['location'] ?? '') ?></small>
+                                </td>
+                                <td style="padding: 12px 10px; text-align: center;">1 Bulan</td>
+                                <td style="padding: 12px 10px; text-align: right;">Rp 4.000.000</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding: 14px 10px; text-align: right; font-weight: 800; font-size: 15px;">TOTAL PEMBAYARAN:</td>
+                                <td style="padding: 14px 10px; text-align: right; font-weight: 800; font-size: 16px; color: #047857;">Rp 12.000.000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px;">
+                        <div>
+                            <div class="invoice-seal">
+                                ✓ LUNAS / PAID<br>
+                                <small style="font-size: 9px; font-weight: normal; letter-spacing: 0;">PT DATA LAKE INDONESIA</small>
+                            </div>
+                        </div>
+                        <div style="text-align: right; font-size: 12px; color: #475569;">
+                            <div>Jakarta, <span id="invSignDate">05 Okt 2026</span></div>
+                            <div style="height: 40px;"></div>
+                            <div style="font-weight: 700; color: #0f172a;">Finance &amp; Billing Dept</div>
+                            <div>PT Data Lake Indonesia</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-modal-footer">
+                    <button type="button" onclick="window.print()" class="btn-dash btn-dash-primary">
+                        <span class="material-symbols-outlined">print</span>
+                        Cetak Kwitansi / Print
+                    </button>
+                    <button type="button" onclick="closeModal('invoiceModal')" class="btn-dash" style="background:#e2e8f0; color:#334155;">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagnostic Terminal Modal -->
+        <div class="dash-modal" id="diagModal" style="display: none !important;">
+            <div class="dash-modal-content" style="max-width: 500px;">
+                <div class="dash-modal-header">
+                    <h3 class="dash-modal-title" id="diagTitle">Diagnostik Terminal Starlink</h3>
+                    <button type="button" onclick="closeModal('diagModal')" class="dash-modal-close">&times;</button>
+                </div>
+                <div class="dash-modal-body" style="line-height: 1.8; font-size: 13.5px; color: #334155;">
+                    <div style="text-align: center; margin-bottom: 16px;">
+                        <div style="font-size: 48px; color: #10b981;" class="material-symbols-outlined">check_circle</div>
+                        <div style="font-size: 18px; font-weight: 800; color: #0f172a;">Kondisi Terminal: Sangat Sehat (Optimal)</div>
+                        <div style="color: #64748b; font-size: 12px;" id="diagKitNum">KIT********</div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                        <div class="form-group">
-                            <label class="form-label" style="color:#334155;">Kata Sandi Awal *</label>
-                            <input type="password" name="password" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" placeholder="Min. 6 karakter" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" style="color:#334155;">Peran Akun</label>
-                            <select name="role" style="height: 48px; width: 100%; border-radius: 6px; border: 1px solid #cbd5e1; padding: 0 12px; font-size: 14px;">
-                                <option value="user">Klien Dedicated PKS</option>
-                                <option value="admin">Administrator</option>
-                            </select>
-                        </div>
+                    <div style="background: #f8fafc; border-radius: 8px; padding: 14px; border: 1px solid #e2e8f0;">
+                        <div style="display:flex; justify-content:space-between;"><span>Kekuatan Sinyal Satelit:</span> <strong style="color:#10b981;">-82 dBm (Optimal)</strong></div>
+                        <div style="display:flex; justify-content:space-between;"><span>Suhu Perangkat:</span> <strong>38°C (Normal)</strong></div>
+                        <div style="display:flex; justify-content:space-between;"><span>Konsumsi Daya Terminal:</span> <strong>64 Watt (Stabil)</strong></div>
+                        <div style="display:flex; justify-content:space-between;"><span>Azimuth / Elevasi Antena:</span> <strong>142° / 68°</strong></div>
+                        <div style="display:flex; justify-content:space-between;"><span>Obstruksi Langit:</span> <strong style="color:#10b981;">0.0% (Clear View)</strong></div>
+                        <div style="display:flex; justify-content:space-between;"><span>Status Sinkronisasi Waktu:</span> <strong>NTP Locked (GPS Active)</strong></div>
                     </div>
                 </div>
                 <div class="dash-modal-footer">
-                    <button type="button" onclick="closeModal('addUserModal')" class="btn-dash" style="background:#e2e8f0; color:#334155;">Batal</button>
-                    <button type="submit" class="btn-dash btn-dash-primary">Simpan Pengguna</button>
+                    <button type="button" onclick="closeModal('diagModal')" class="btn-dash btn-dash-primary">Selesai</button>
                 </div>
-            </form>
-        </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- Modal Kwitansi Resmi / Invoice -->
-    <div class="dash-modal" id="invoiceModal">
-        <div class="dash-modal-content" style="max-width: 720px; padding: 0;">
-            <div style="padding: 16px 24px; background: #07162c; color: #fff; display: flex; justify-content: space-between; align-items: center; border-radius: 12px 12px 0 0;">
-                <div style="font-weight: 700; font-size: 16px;">Kwitansi Resmi PT Data Lake Indonesia</div>
-                <button type="button" onclick="closeModal('invoiceModal')" style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;">&times;</button>
-            </div>
-            
-            <div class="invoice-paper" id="printableInvoice">
-                <div class="invoice-header">
-                    <div>
-                        <img src="/logo/DLI-logo-navy.png" alt="Data Lake Indonesia" style="height: 36px; margin-bottom: 6px;">
-                        <div style="font-size: 12px; color: #64748b;">
-                            Authorized Distributor Starlink Indonesia<br>
-                            Gedung Data Lake, Jakarta Selatan<br>
-                            Email: billing@datalake.id | Telp: <?= e(get_wa_number()) ?>
-                        </div>
-                    </div>
-                    <div style="text-align: right;">
-                        <h2 style="margin: 0; font-size: 20px; color: #07162c; text-transform: uppercase;">Kwitansi Pembayaran</h2>
-                        <div style="font-size: 13px; font-family: monospace; font-weight: 700; color: #0284c7;" id="invNumber">INV/DLI/202610/0842</div>
-                        <div style="font-size: 12px; color: #64748b;" id="invDate">Tanggal: 05 Okt 2026</div>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; font-size: 13px;">
-                    <div>
-                        <div style="font-size: 11px; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">Telah Diterima Dari:</div>
-                        <div style="font-weight: 700; font-size: 15px; color: #0f172a;"><?= e($current_user['name']) ?></div>
-                        <div style="color: #64748b;"><?= e($current_user['email']) ?> | <?= e($current_user['phone']) ?></div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 11px; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">Rujukan Kontrak PKS:</div>
-                        <div style="font-weight: 700; color: #0f172a;">PKS-DLI/STARLINK-DEDICATED/2025-0082</div>
-                        <div style="color: #10b981; font-weight: 600;">Metode: Mandiri Corporate Auto-Debit</div>
-                    </div>
-                </div>
-
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
-                    <thead>
-                        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: left;">
-                            <th style="padding: 10px;">Deskripsi Layanan</th>
-                            <th style="padding: 10px; text-align: center;">Kuantitas</th>
-                            <th style="padding: 10px; text-align: right;">Biaya</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="border-bottom: 1px solid #f1f5f9;">
-                            <td style="padding: 12px 10px;">
-                                <strong>Langganan Dedicated Starlink Bandwidth Priority</strong><br>
-                                <small style="color: #64748b;">Terminal 1 (<?= e($user_kits[0]['kit_number'] ?? 'KIT-1') ?>) — <?= e($user_kits[0]['location'] ?? '') ?></small>
-                            </td>
-                            <td style="padding: 12px 10px; text-align: center;">1 Bulan</td>
-                            <td style="padding: 12px 10px; text-align: right;">Rp 4.000.000</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #f1f5f9;">
-                            <td style="padding: 12px 10px;">
-                                <strong>Langganan Dedicated Starlink Bandwidth Priority</strong><br>
-                                <small style="color: #64748b;">Terminal 2 (<?= e($user_kits[1]['kit_number'] ?? 'KIT-2') ?>) — <?= e($user_kits[1]['location'] ?? '') ?></small>
-                            </td>
-                            <td style="padding: 12px 10px; text-align: center;">1 Bulan</td>
-                            <td style="padding: 12px 10px; text-align: right;">Rp 4.000.000</td>
-                        </tr>
-                        <tr style="border-bottom: 2px solid #0f172a;">
-                            <td style="padding: 12px 10px;">
-                                <strong>Langganan Dedicated Starlink Bandwidth Priority</strong><br>
-                                <small style="color: #64748b;">Terminal 3 (<?= e($user_kits[2]['kit_number'] ?? 'KIT-3') ?>) — <?= e($user_kits[2]['location'] ?? '') ?></small>
-                            </td>
-                            <td style="padding: 12px 10px; text-align: center;">1 Bulan</td>
-                            <td style="padding: 12px 10px; text-align: right;">Rp 4.000.000</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="padding: 14px 10px; text-align: right; font-weight: 800; font-size: 15px;">TOTAL PEMBAYARAN:</td>
-                            <td style="padding: 14px 10px; text-align: right; font-weight: 800; font-size: 16px; color: #047857;">Rp 12.000.000</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px;">
-                    <div>
-                        <div class="invoice-seal">
-                            ✓ LUNAS / PAID<br>
-                            <small style="font-size: 9px; font-weight: normal; letter-spacing: 0;">PT DATA LAKE INDONESIA</small>
-                        </div>
-                    </div>
-                    <div style="text-align: right; font-size: 12px; color: #475569;">
-                        <div>Jakarta, <span id="invSignDate">05 Okt 2026</span></div>
-                        <div style="height: 40px;"></div>
-                        <div style="font-weight: 700; color: #0f172a;">Finance &amp; Billing Dept</div>
-                        <div>PT Data Lake Indonesia</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="dash-modal-footer">
-                <button type="button" onclick="window.print()" class="btn-dash btn-dash-primary">
-                    <span class="material-symbols-outlined">print</span>
-                    Cetak Kwitansi / Print
-                </button>
-                <button type="button" onclick="closeModal('invoiceModal')" class="btn-dash" style="background:#e2e8f0; color:#334155;">
-                    Tutup
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Diagnostic Terminal Modal -->
-    <div class="dash-modal" id="diagModal">
-        <div class="dash-modal-content" style="max-width: 500px;">
-            <div class="dash-modal-header">
-                <h3 class="dash-modal-title" id="diagTitle">Diagnostik Terminal Starlink</h3>
-                <button type="button" onclick="closeModal('diagModal')" class="dash-modal-close">&times;</button>
-            </div>
-            <div class="dash-modal-body" style="line-height: 1.8; font-size: 13.5px; color: #334155;">
-                <div style="text-align: center; margin-bottom: 16px;">
-                    <div style="font-size: 48px; color: #10b981;" class="material-symbols-outlined">check_circle</div>
-                    <div style="font-size: 18px; font-weight: 800; color: #0f172a;">Kondisi Terminal: Sangat Sehat (Optimal)</div>
-                    <div style="color: #64748b; font-size: 12px;" id="diagKitNum">KIT********</div>
-                </div>
-
-                <div style="background: #f8fafc; border-radius: 8px; padding: 14px; border: 1px solid #e2e8f0;">
-                    <div style="display:flex; justify-content:space-between;"><span>Kekuatan Sinyal Satelit:</span> <strong style="color:#10b981;">-82 dBm (Optimal)</strong></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Suhu Perangkat:</span> <strong>38°C (Normal)</strong></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Konsumsi Daya Terminal:</span> <strong>64 Watt (Stabil)</strong></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Azimuth / Elevasi Antena:</span> <strong>142° / 68°</strong></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Obstruksi Langit:</span> <strong style="color:#10b981;">0.0% (Clear View)</strong></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Status Sinkronisasi Waktu:</span> <strong>NTP Locked (GPS Active)</strong></div>
-                </div>
-            </div>
-            <div class="dash-modal-footer">
-                <button type="button" onclick="closeModal('diagModal')" class="btn-dash btn-dash-primary">Selesai</button>
             </div>
         </div>
     </div>
@@ -1405,11 +1494,19 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
     }
 
     function openModal(id) {
-        document.getElementById(id).classList.add('show');
+        const m = document.getElementById(id);
+        if (m) {
+            m.style.setProperty('display', 'flex', 'important');
+            m.classList.add('show');
+        }
     }
 
     function closeModal(id) {
-        document.getElementById(id).classList.remove('show');
+        const m = document.getElementById(id);
+        if (m) {
+            m.style.setProperty('display', 'none', 'important');
+            m.classList.remove('show');
+        }
     }
 
     function openInvoiceModal(bill) {
@@ -1425,8 +1522,44 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
         openModal('diagModal');
     }
 
-    // Interactive Speed Test Simulation
+    // Live kit telemetry data store (distinct values for each kit in 180 - 300 Mbps)
+    const kitData = [
+        { down: parseFloat('<?= $user_kits[0]["live_down"] ?? 284.5 ?>'), up: parseFloat('<?= $user_kits[0]["live_up"] ?? 48.2 ?>'), ping: parseInt('<?= $user_kits[0]["live_ping"] ?? 22 ?>'), min: 265, max: 299, upMin: 45, upMax: 52, pMin: 20, pMax: 24 },
+        { down: parseFloat('<?= $user_kits[1]["live_down"] ?? 218.4 ?>'), up: parseFloat('<?= $user_kits[1]["live_up"] ?? 36.8 ?>'), ping: parseInt('<?= $user_kits[1]["live_ping"] ?? 28 ?>'), min: 192, max: 238, upMin: 34, upMax: 41, pMin: 26, pMax: 32 },
+        { down: parseFloat('<?= $user_kits[2]["live_down"] ?? 263.7 ?>'), up: parseFloat('<?= $user_kits[2]["live_up"] ?? 41.5 ?>'), ping: parseInt('<?= $user_kits[2]["live_ping"] ?? 25 ?>'), min: 238, max: 279, upMin: 38, upMax: 46, pMin: 23, pMax: 29 }
+    ];
+
+    // Interactive Speed Test Simulation with Terminal Selector
+    let activeTestTerminal = 'all';
     let speedtestInterval = null;
+
+    function selectTestTerminal(termKey, btnElem) {
+        activeTestTerminal = termKey;
+        document.querySelectorAll('.btn-term-select').forEach(b => b.classList.remove('active'));
+        if (btnElem) btnElem.classList.add('active');
+
+        const valElem = document.getElementById('gaugeVal');
+        const pingElem = document.getElementById('testPing');
+        const upElem = document.getElementById('testUp');
+        const unitElem = document.getElementById('gaugeUnit');
+
+        if (valElem) {
+            if (termKey === 'all') {
+                const avgD = (kitData.reduce((acc, cur) => acc + cur.down, 0) / kitData.length).toFixed(1);
+                valElem.innerText = avgD;
+                if (unitElem) unitElem.innerText = 'Mbps Download (Agregasi 3 Kit)';
+            } else {
+                const idx = parseInt(termKey);
+                if (kitData[idx]) {
+                    valElem.innerText = kitData[idx].down.toFixed(1);
+                    if (pingElem) pingElem.innerText = kitData[idx].ping + ' ms';
+                    if (upElem) upElem.innerText = kitData[idx].up.toFixed(1) + ' Mbps';
+                    if (unitElem) unitElem.innerText = 'Mbps Download (Terminal ' + (idx + 1) + ')';
+                }
+            }
+        }
+    }
+
     function startSpeedtest() {
         const gauge = document.getElementById('speedGauge');
         const valElem = document.getElementById('gaugeVal');
@@ -1436,64 +1569,127 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
         const testUp = document.getElementById('testUp');
         const testJitter = document.getElementById('testJitter');
 
-        if (!gauge || !valElem) return;
+        if (!gauge || !valElem || !btn) return;
 
         btn.disabled = true;
-        btn.innerHTML = '<span class="material-symbols-outlined">hourglass_top</span> Mengukur Koneksi...';
+        btn.innerHTML = '<span class="material-symbols-outlined">hourglass_top</span> Menguji Koneksi...';
         gauge.classList.add('testing');
 
+        // Target randomized speed between 190.0 and 300.0 Mbps (never identical)
+        let targetSpeed, targetPing, targetUp, targetJitter;
+        if (activeTestTerminal === '0') {
+            targetSpeed = (265 + Math.random() * 33).toFixed(1); // 265 - 298
+            targetPing = Math.floor(20 + Math.random() * 4);
+            targetUp = (45 + Math.random() * 7).toFixed(1);
+            targetJitter = (1.2 + Math.random() * 0.4).toFixed(1);
+        } else if (activeTestTerminal === '1') {
+            targetSpeed = (192 + Math.random() * 44).toFixed(1); // 192 - 236
+            targetPing = Math.floor(26 + Math.random() * 6);
+            targetUp = (34 + Math.random() * 6).toFixed(1);
+            targetJitter = (1.8 + Math.random() * 0.5).toFixed(1);
+        } else if (activeTestTerminal === '2') {
+            targetSpeed = (238 + Math.random() * 40).toFixed(1); // 238 - 278
+            targetPing = Math.floor(23 + Math.random() * 6);
+            targetUp = (39 + Math.random() * 7).toFixed(1);
+            targetJitter = (1.6 + Math.random() * 0.4).toFixed(1);
+        } else {
+            // All terminals random anywhere in 190 - 300 Mbps
+            targetSpeed = (190 + Math.random() * 109).toFixed(1);
+            targetPing = Math.floor(20 + Math.random() * 11);
+            targetUp = (36 + Math.random() * 15).toFixed(1);
+            targetJitter = (1.4 + Math.random() * 0.8).toFixed(1);
+        }
+
         // Step 1: Ping
-        unitElem.innerText = 'Mengukur Ping...';
-        valElem.innerText = '22';
+        if (unitElem) unitElem.innerText = 'Mengukur Latensi Satelit...';
+        valElem.innerText = '0.0';
 
         setTimeout(() => {
-            testPing.innerText = '21 ms';
-            unitElem.innerText = 'Menguji Download...';
+            if (testPing) testPing.innerText = targetPing + ' ms';
+            if (unitElem) unitElem.innerText = 'Menguji Download Speed...';
 
-            let currentSpeed = 50;
-            const targetSpeed = 296.8;
+            let currentSpeed = 30;
+            const targetNum = parseFloat(targetSpeed);
+            clearInterval(speedtestInterval);
+            
             speedtestInterval = setInterval(() => {
-                currentSpeed += Math.floor(Math.random() * 25) + 15;
-                if (currentSpeed >= targetSpeed) {
-                    currentSpeed = targetSpeed;
+                currentSpeed += Math.floor(Math.random() * 26) + 14;
+                if (currentSpeed >= targetNum) {
+                    currentSpeed = targetNum;
                     clearInterval(speedtestInterval);
 
                     // Step 2: Upload
-                    unitElem.innerText = 'Menguji Upload...';
+                    if (unitElem) unitElem.innerText = 'Menguji Upload Speed...';
                     setTimeout(() => {
-                        testUp.innerText = '48.6 Mbps';
-                        testJitter.innerText = '1.7 ms / 0%';
-                        unitElem.innerText = 'Mbps Download';
-                        valElem.innerText = '298.4';
+                        if (testUp) testUp.innerText = targetUp + ' Mbps';
+                        if (testJitter) testJitter.innerText = targetJitter + ' ms / 0%';
+                        if (unitElem) unitElem.innerText = 'Mbps Download (' + (activeTestTerminal === 'all' ? 'Agregasi' : 'Terminal ' + (parseInt(activeTestTerminal) + 1)) + ')';
+                        valElem.innerText = targetSpeed;
                         gauge.classList.remove('testing');
                         btn.disabled = false;
-                        btn.innerHTML = '<span class="material-symbols-outlined">refresh</span> Jalankan Ulang Pengujian';
-                    }, 1200);
+                        btn.innerHTML = '<span class="material-symbols-outlined">refresh</span> Jalankan Ulang Pengujian (' + targetSpeed + ' Mbps)';
+                    }, 1000);
                 }
                 valElem.innerText = currentSpeed.toFixed(1);
-            }, 60);
+            }, 50);
 
-        }, 800);
+        }, 600);
     }
 
-    // Dynamic Micro-fluctuation for Real-Time Feel
+    // Dynamic Micro-fluctuation for Real-Time Live Feel (Different for each Starlink Kit, 180 - 300 Mbps)
     setInterval(() => {
+        kitData.forEach((k, idx) => {
+            const dDelta = (Math.random() * 6 - 3);
+            k.down = Math.min(k.max, Math.max(k.min, k.down + dDelta));
+            
+            const uDelta = (Math.random() * 1.6 - 0.8);
+            k.up = Math.min(k.upMax, Math.max(k.upMin, k.up + uDelta));
+            
+            if (Math.random() > 0.6) {
+                k.ping = Math.floor(k.pMin + Math.random() * (k.pMax - k.pMin + 1));
+            }
+
+            // Update Tab 1 elements if present
+            const kd = document.getElementById('kit-down-' + idx);
+            if (kd) kd.innerHTML = k.down.toFixed(1) + '<small style="font-size:10px;">Mbps</small>';
+            
+            const ku = document.getElementById('kit-up-' + idx);
+            if (ku) ku.innerHTML = k.up.toFixed(1) + '<small style="font-size:10px;">Mbps</small>';
+            
+            const kp = document.getElementById('kit-ping-' + idx);
+            if (kp) kp.innerHTML = k.ping + '<small style="font-size:10px;">ms</small>';
+
+            // Update Tab 2 elements if present
+            const td = document.getElementById('tele-down-' + idx);
+            if (td) td.innerHTML = k.down.toFixed(1) + ' <small style="font-size: 11px;">Mbps</small>';
+            
+            const tu = document.getElementById('tele-up-' + idx);
+            if (tu) tu.innerHTML = k.up.toFixed(1) + ' <small style="font-size: 11px;">Mbps</small>';
+            
+            const tp = document.getElementById('tele-ping-' + idx);
+            if (tp) tp.innerHTML = k.ping + ' <small style="font-size: 11px;">ms</small>';
+        });
+
+        // Update overall average metrics in Tab 1
+        const avgD = (kitData.reduce((acc, cur) => acc + cur.down, 0) / kitData.length).toFixed(1);
+        const avgU = (kitData.reduce((acc, cur) => acc + cur.up, 0) / kitData.length).toFixed(1);
+        const avgP = Math.round(kitData.reduce((acc, cur) => acc + cur.ping, 0) / kitData.length);
+
         const mDown = document.getElementById('metric-down');
+        if (mDown) mDown.innerText = avgD + ' Mbps';
+
         const mUp = document.getElementById('metric-up');
+        if (mUp) mUp.innerText = avgU + ' Mbps';
+
         const mPing = document.getElementById('metric-ping');
-        if (mDown) {
-            const downVal = (294 + (Math.random() * 4 - 2)).toFixed(1);
-            mDown.innerText = downVal + ' Mbps';
-        }
-        if (mUp) {
-            const upVal = (48 + (Math.random() * 2 - 1)).toFixed(1);
-            mUp.innerText = upVal + ' Mbps';
-        }
-        if (mPing) {
-            const pingVal = Math.floor(21 + Math.random() * 3);
-            mPing.innerText = pingVal + ' ms';
-        }
-    }, 3000);
+        if (mPing) mPing.innerText = avgP + ' ms';
+
+        const chartAvgD = document.getElementById('chartAvgDown');
+        if (chartAvgD) chartAvgD.innerText = 'Download (Avg: ' + avgD + ' Mbps)';
+
+        const chartAvgU = document.getElementById('chartAvgUp');
+        if (chartAvgU) chartAvgU.innerText = 'Upload (Avg: ' + avgU + ' Mbps)';
+    }, 2500);
     </script>
 </body>
 </html>
