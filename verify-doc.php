@@ -6,7 +6,7 @@
 
 require_once __DIR__ . '/config/db.php';
 
-$doc_num = $_GET['doc'] ?? '082/PKS/DLI-NIS/02/2026';
+$doc_num = $_GET['doc'] ?? '082/PKS/DLI-NIS/02/2025';
 $is_valid = true;
 ?>
 <!DOCTYPE html>
@@ -246,7 +246,7 @@ $is_valid = true;
                 </tr>
                 <tr>
                     <th>Nomor Dokumen</th>
-                    <td><strong style="color: #0284c7; font-family: monospace; font-size: 14px;">082/PKS/DLI-NIS/02/2026</strong></td>
+                    <td><strong style="color: #0284c7; font-family: monospace; font-size: 14px;">082/PKS/DLI-NIS/02/2025</strong></td>
                 </tr>
                 <tr>
                     <th>PIHAK PERTAMA (Penyedia)</th>

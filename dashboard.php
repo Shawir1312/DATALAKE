@@ -821,7 +821,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                             Dokumen Kontrak PKS: PT Data Lake Indonesia &amp; PT Network Inovatif Solutions
                         </h2>
                         <div style="font-size: 13.5px; color: #94a3b8; display: flex; flex-wrap: wrap; gap: 16px;">
-                            <span>No: <strong style="color: #00D2FF; font-family: monospace;">082/PKS/DLI-NIS/02/2026</strong></span>
+                            <span>No: <strong style="color: #00D2FF; font-family: monospace;">082/PKS/DLI-NIS/02/2025</strong></span>
                             <span>Masa Berlaku: <strong style="color: #ffffff;">36 Bulan (01 Feb 2025 – 01 Feb 2028)</strong></span>
                             <span>Status: <strong style="color: #10b981;">Tercatat Sah di Database DLI</strong></span>
                         </div>
@@ -867,13 +867,13 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                             PENYEDIAAN LAYANAN INTERNET UNTUK RESELLER
                         </h3>
                         <div style="font-size:13px; font-weight:700; color:#0f172a; font-family:monospace; background:#f1f5f9; display:inline-block; padding:4px 14px; border-radius:6px; border:1px solid #cbd5e1;">
-                            Nomor: 082/PKS/DLI-NIS/02/2026
+                            Nomor: 082/PKS/DLI-NIS/02/2025
                         </div>
                     </div>
 
                     <!-- Pembukaan -->
                     <p style="text-align:justify; margin-bottom:16px; font-size:13.5px;">
-                        Pada hari ini, <strong>Senin</strong>, tanggal <strong>lima belas</strong> bulan <strong>Februari</strong> tahun <strong>dua ribu dua puluh enam</strong> (15-02-2026), telah dibuat Perjanjian Kerja Sama (“Perjanjian”) oleh dan antara:
+                        Pada hari ini, <strong>Rabu</strong>, tanggal <strong>lima</strong> bulan <strong>Februari</strong> tahun <strong>dua ribu dua puluh lima</strong> (05-02-2025), telah dibuat Perjanjian Kerja Sama (“Perjanjian”) oleh dan antara:
                     </p>
 
                     <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px 20px; margin-bottom:24px; font-size:13.5px;">
@@ -1005,7 +1005,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                     <!-- Penandatanganan & QR Code Tanda Tangan Resmi -->
                     <div style="margin-top:24px; padding-top:20px; border-top:1px solid #e2e8f0;">
                         <div style="text-align:right; font-size:13.5px; margin-bottom:20px; color:#475569;">
-                            Jakarta Selatan, 15 Februari 2026
+                            Jakarta Selatan, 05 Februari 2025
                         </div>
 
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; text-align:center;">
@@ -1014,10 +1014,6 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                                 <div style="font-weight:800; font-size:13px; color:#64748b; text-transform:uppercase;">PIHAK PERTAMA</div>
                                 <div style="font-weight:800; font-size:15px; color:#07162c; margin-bottom:12px;">PT DATA LAKE INDONESIA</div>
 
-                                <!-- E-Meterai 10000 Badge -->
-                                <div style="display:inline-block; border:2px dashed #b45309; background:#fffbeb; color:#b45309; padding:4px 10px; border-radius:6px; font-size:10px; font-weight:800; margin-bottom:12px; letter-spacing:0.5px;">
-                                    E-METERAI 10000 DIGITAL PERURI #MTR-DLI-2026-08291
-                                </div>
 
                                 <!-- Real QR Code with Data Lake Logo in Center -->
                                 <div onclick="window.open('/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2026','_blank')" style="cursor:pointer; display:inline-block; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:transform 0.2s;" title="Scan QR / klik untuk verifikasi keaslian dokumen di database">
@@ -1028,12 +1024,12 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                                         </div>
                                     </div>
                                     <div style="font-size:9px; color:#0284c7; font-family:monospace; font-weight:700; margin-top:4px; letter-spacing:0.5px;">
-                                        082/PKS/DLI-NIS/02/2026
+                                        082/PKS/DLI-NIS/02/2025
                                     </div>
                                 </div>
 
                                 <div style="margin-top:8px;">
-                                    <a href="/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2026" target="_blank" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
+                                    <a href="/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2025" target="_blank" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
                                         <span class="material-symbols-outlined" style="font-size:14px;">verified</span>
                                         Cek Keaslian Dokumen Database
                                     </a>
@@ -1052,13 +1048,9 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                                 <div style="font-weight:800; font-size:13px; color:#64748b; text-transform:uppercase;">PIHAK KEDUA</div>
                                 <div style="font-weight:800; font-size:15px; color:#07162c; margin-bottom:12px;">PT NETWORK INOVATIF SOLUTIONS</div>
 
-                                <!-- E-Meterai 10000 Badge -->
-                                <div style="display:inline-block; border:2px dashed #b45309; background:#fffbeb; color:#b45309; padding:4px 10px; border-radius:6px; font-size:10px; font-weight:800; margin-bottom:12px; letter-spacing:0.5px;">
-                                    E-METERAI 10000 DIGITAL PERURI #MTR-NIS-2026-04421
-                                </div>
 
                                 <!-- Real QR Code PIHAK KEDUA with DLI Logo in Center -->
-                                <div onclick="window.open('/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2026','_blank')" style="cursor:pointer; display:inline-block; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:transform 0.2s;" title="Scan QR / klik untuk verifikasi keaslian dokumen di database">
+                                <div onclick="window.open('/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2025','_blank')" style="cursor:pointer; display:inline-block; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:transform 0.2s;" title="Scan QR / klik untuk verifikasi keaslian dokumen di database">
                                     <div style="position:relative; width:120px; height:120px; margin:0 auto;">
                                         <canvas id="qrcode-pihak2" style="width:120px;height:120px;"></canvas>
                                         <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:26px; height:26px; background:#ffffff; border-radius:50%; border:1.5px solid #059669; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.18); padding:2px;">
@@ -1066,12 +1058,12 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                                         </div>
                                     </div>
                                     <div style="font-size:9px; color:#059669; font-family:monospace; font-weight:700; margin-top:4px; letter-spacing:0.5px;">
-                                        082/PKS/DLI-NIS/02/2026
+                                        082/PKS/DLI-NIS/02/2025
                                     </div>
                                 </div>
 
                                 <div style="margin-top:8px;">
-                                    <a href="/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2026" target="_blank" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
+                                    <a href="/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2025" target="_blank" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
                                         <span class="material-symbols-outlined" style="font-size:14px;">verified</span>
                                         Cek Keaslian Dokumen Database
                                     </a>
@@ -1733,7 +1725,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                         <tbody>
                             <tr style="border-bottom: 1px solid #f1f5f9;">
                                 <td style="padding: 9px 4px; color: #64748b; width: 38%;">Nomor Perjanjian:</td>
-                                <td style="padding: 9px 4px; font-weight: 700; color: #0f172a; font-family: monospace;">082/PKS/DLI-NIS/02/2026</td>
+                                <td style="padding: 9px 4px; font-weight: 700; color: #0f172a; font-family: monospace;">082/PKS/DLI-NIS/02/2025</td>
                             </tr>
                             <tr style="border-bottom: 1px solid #f1f5f9;">
                                 <td style="padding: 9px 4px; color: #64748b;">Perihal:</td>
@@ -1771,7 +1763,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                     </div>
                 </div>
                 <div class="dash-modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
-                    <a href="/verify-doc.php?doc=082/PKS/DLI-NIS/02/2026" target="_blank" class="btn-dash" style="background:#0284c7; color:#ffffff; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                    <a href="/verify-doc.php?doc=082/PKS/DLI-NIS/02/2025" target="_blank" class="btn-dash" style="background:#0284c7; color:#ffffff; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
                         <span class="material-symbols-outlined" style="font-size:18px;">open_in_new</span>
                         Buka Halaman Audit Publik
                     </a>
