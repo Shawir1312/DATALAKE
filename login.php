@@ -138,25 +138,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </button>
         </form>
 
-        <div class="demo-credentials-box">
-            <div class="demo-title">
-                <span class="material-symbols-outlined" style="font-size: 16px;">key</span>
-                Akun Demo Administrator:
-            </div>
-            <div>Username: <span class="demo-badge" onclick="fillDemo('admin', 'admin123')">admin</span></div>
-            <div style="margin-top: 4px;">Password: <span class="demo-badge" onclick="fillDemo('admin', 'admin123')">admin123</span> <span style="font-size: 11px; opacity: 0.7;">(Klik untuk isi otomatis)</span></div>
-        </div>
-
         <div class="auth-footer">
             Belum memiliki akun? <a href="register.php" class="auth-link">Daftar sekarang</a>
         </div>
     </div>
-
-    <script>
-    function fillDemo(username, password) {
-        document.getElementById('login_input').value = username;
-        document.getElementById('password').value = password;
-    }
-    </script>
 </body>
 </html>
