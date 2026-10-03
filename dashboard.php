@@ -873,7 +873,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
 
                     <!-- Pembukaan -->
                     <p style="text-align:justify; margin-bottom:16px; font-size:13.5px;">
-                        Pada hari ini, <strong>Rabu</strong>, tanggal <strong>lima</strong> bulan <strong>Februari</strong> tahun <strong>dua ribu dua puluh lima</strong> (05-02-2025), telah dibuat Perjanjian Kerja Sama (“Perjanjian”) oleh dan antara:
+                        Pada hari ini, <strong>Rabu, tanggal 05 Februari 2025</strong>, telah dibuat dan ditandatangani Perjanjian Kerja Sama Penyediaan Layanan Internet (selanjutnya disebut <strong>“Perjanjian”</strong>), oleh dan antara pihak-pihak di bawah ini:
                     </p>
 
                     <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px 20px; margin-bottom:24px; font-size:13.5px;">
