@@ -66,13 +66,25 @@ CREATE TABLE IF NOT EXISTS `starlink_kits` (
 
 
 -- Default Admin Account (Password: admin123)
-INSERT INTO `users` (`name`, `username`, `email`, `phone`, `password`, `role`, `status`) 
-VALUES ('Administrator Data Lake', 'admin', 'admin@datalake.id', '08170117800', '$2y$10$wEkgz/e8WpL4gR6pmsLrqeSZZz5J7hY4k7Wb0pM6v3Rj7s8XqX4e.', 'admin', 'active')
+INSERT INTO `users` (`id`, `name`, `username`, `email`, `phone`, `password`, `role`, `status`) 
+VALUES (1, 'Administrator Data Lake', 'admin', 'admin@datalake.id', '08170117800', '$2y$10$wEkgz/e8WpL4gR6pmsLrqeSZZz5J7hY4k7Wb0pM6v3Rj7s8XqX4e.', 'admin', 'active')
 ON DUPLICATE KEY UPDATE `username` = `username`;
+
+-- Dedicated PKS Client Account (Password: Musawir1312)
+INSERT INTO `users` (`id`, `name`, `username`, `email`, `phone`, `password`, `role`, `status`)
+VALUES (2, 'PT NETWORK INOVATIF SOLUTIONS', 'snet12', 'admin@snetwifi.com', '082321451749', '$2y$10$9owgrBOYgGlKoJWfhiNN7es50thnP8HjZuCahinDgWq0ysNUbMdG2', 'user', 'active')
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `email` = VALUES(`email`), `phone` = VALUES(`phone`), `password` = VALUES(`password`);
+
+-- Default Starlink Kits (Terminal A, B, C) for PKS Client
+INSERT INTO `starlink_kits` (`user_id`, `kit_number`, `model`, `plan_name`, `location`, `status`, `ip_address`, `sla_percent`, `download_speed`, `upload_speed`, `ping_ms`) VALUES
+(2, 'KIT4GKRZ8Y2', 'Starlink Standard Gen 3 (V4)', 'Dedicated Business PKS Enterprise (9 Jt/Bln)', 'Terminal A', 'online', '100.64.18.24', 99.98, 284, 48, 22),
+(2, 'KITTLGAT3S7', 'Starlink Standard Gen 3 (V4)', 'Dedicated Business PKS Enterprise (9 Jt/Bln)', 'Terminal B', 'online', '100.64.18.25', 99.95, 218, 38, 28),
+(2, 'KITPT2B5P59', 'Starlink Standard Gen 3 (V4)', 'Dedicated Business PKS Enterprise (9 Jt/Bln)', 'Terminal C', 'online', '100.64.18.26', 99.99, 265, 42, 24);
 
 -- Default Site Settings
 INSERT INTO `site_settings` (`key`, `val`) VALUES 
 ('wa_number', '08170117800'),
 ('store_title', 'Data Lake Official Store')
 ON DUPLICATE KEY UPDATE `val` = VALUES(`val`);
+
 

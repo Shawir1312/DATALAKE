@@ -29,17 +29,17 @@ Dilengkapi dengan wizard instalasi otomatis web (**`install.php`**) untuk kemuda
 - **Session & Audit Log**: Pencatatan aktivitas pengguna dan riwayat login ke dalam tabel `activity_logs`.
 
 ### 4. Portal Monitoring Dedicated PKS Enterprise (`dashboard.php`)
-- **3 Unit Starlink Kit Gen 3 V4 Aktif**: Auto-generate nomor KIT acak dengan format standar `KIT********` (contoh: `KIT4GKRZ8Y2`) dengan status aktif dan terkunci (Read-Only NOC) sehingga pengguna tidak dapat mengubah konfigurasi fisik atau nomor kit.
+- **3 Unit Starlink Kit Gen 3 V4 Aktif (Terminal A, Terminal B, Terminal C)**: Auto-generate nomor KIT acak dengan format standar `KIT********` (contoh: `KIT4GKRZ8Y2`) dengan status aktif dan terkunci (Read-Only NOC) sehingga pengguna tidak dapat mengubah konfigurasi fisik atau nomor kit.
 - **Static & Dynamic Telemetry Monitoring**:
-  - Download Speed (s/d 350 Mbps) & Upload Speed (s/d 42 Mbps)
-  - Latency / Ping real-time (24ms - 32ms) & Jitter test
+  - Download Speed (180 - 300 Mbps) & Upload Speed (34 - 52 Mbps) independen per-terminal
+  - Latency / Ping real-time (20ms - 32ms) & Jitter test
   - SLA Uptime Guarantee 99.98% dengan visual matriks 30 hari
-  - Grafik visual gelombang 24-jam & Speedtest meter interaktif
+  - Grafik visual gelombang 24-jam & Speedtest meter mandiri per-terminal (Terminal A, B, C)
 - **Riwayat Tagihan & Pembayaran (Billing History)**:
-  - Biaya langganan bulanan Dedicated PKS **Rp 12.000.000 / bulan**.
-  - Riwayat penagihan otomatis dari **Februari 2025 sampai sekarang (Oktober 2026)** = 21 invoice.
+  - Biaya langganan bulanan Dedicated PKS **Rp 9.000.000 / bulan** (Terminal A: 3 Jt, Terminal B: 3 Jt, Terminal C: 3 Jt).
+  - Riwayat penagihan otomatis dari **Februari 2025 sampai sekarang (Oktober 2026)** = 21 invoice (Total Rp 189.000.000,-).
   - Seluruh status tagihan berstatus **LUNAS (Paid in Full)**.
-  - Modal cetak **Kwitansi Digital Resmi PT Data Lake Indonesia** lengkap dengan nomor invoice, rincian PPN 11%, stempel digital, dan tanda tangan bagian keuangan.
+  - Modal cetak **Kwitansi Digital Resmi PT Data Lake Indonesia** lengkap dengan nomor invoice, rincian per-terminal, stempel digital, dan tanda tangan bagian keuangan.
 - **Detail Kontrak PKS**: Informasi nomor PKS, durasi kontrak, komitmen bandwidth 1:1, dan tombol darurat NOC 24/7.
 
 ### 5. Dashboard Administrator
@@ -86,11 +86,21 @@ Buka browser ke [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 
 ---
 
-## 🔑 Kredensial Default Administrator
-Jika menggunakan database bawaan tanpa menjalankan installer ulang:
+## 🔑 Kredensial Akun Bawaan
+
+### 1. Akun Administrator NOC:
 - **Username**: `admin`
 - **Password**: `admin123`
 - **Email**: `admin@datalake.id`
+
+### 2. Akun Klien Dedicated PKS (PT NETWORK INOVATIF SOLUTIONS):
+- **Perusahaan**: `PT NETWORK INOVATIF SOLUTIONS`
+- **Username**: `snet12`
+- **Password**: `Musawir1312`
+- **Email**: `admin@snetwifi.com`
+- **No. WhatsApp/HP**: `082321451749`
+- **Layanan**: Dedicated Business PKS Enterprise (3 Kit Starlink Gen 3 V4: Terminal A, B, C)
+- **Tagihan Bulanan**: Rp 9.000.000,- / Bulan (Semua Lunas)
 
 ---
 

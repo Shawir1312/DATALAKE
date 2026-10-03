@@ -262,6 +262,32 @@ function init_db_tables(PDO $pdo) {
             'contacted'
         ]);
     }
+
+    // Ensure Dedicated PKS Client User 'snet12' (PT NETWORK INOVATIF SOLUTIONS) exists
+    try {
+        $checkUser = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+        $checkUser->execute(['snet12']);
+        $snetUser = $checkUser->fetch();
+        if (!$snetUser) {
+            $snetPass = password_hash('Musawir1312', PASSWORD_BCRYPT);
+            $timeCol = ($driver === 'sqlite') ? "datetime('now')" : "NOW()";
+            $insSnet = $pdo->prepare("
+                INSERT INTO users (name, username, email, phone, password, role, status, created_at)
+                VALUES (?, ?, ?, ?, ?, 'user', 'active', $timeCol)
+            ");
+            $insSnet->execute([
+                'PT NETWORK INOVATIF SOLUTIONS',
+                'snet12',
+                'admin@snetwifi.com',
+                '082321451749',
+                $snetPass
+            ]);
+            $snet_id = (int)$pdo->lastInsertId();
+            get_user_starlink_kits($snet_id);
+        }
+    } catch (Exception $e) {
+        // Continue
+    }
 }
 
 /**
@@ -336,14 +362,14 @@ function get_user_starlink_kits($user_id) {
 
     if (empty($kits)) {
         $locations = [
-            'Terminal A — Kantor Pusat / Jakarta HQ',
-            'Terminal B — Site Operasional Balikpapan',
-            'Terminal C — Remote Site / Fasilitas Sorong'
+            'Terminal A',
+            'Terminal B',
+            'Terminal C'
         ];
         $telemetries = [
-            ['down' => 294, 'up' => 48, 'ping' => 22, 'ip' => '100.64.18.24', 'sla' => 99.98],
-            ['down' => 282, 'up' => 44, 'ping' => 26, 'ip' => '100.64.18.25', 'sla' => 99.95],
-            ['down' => 312, 'up' => 54, 'ping' => 20, 'ip' => '100.64.18.26', 'sla' => 99.99],
+            ['down' => 284, 'up' => 48, 'ping' => 22, 'ip' => '100.64.18.24', 'sla' => 99.98],
+            ['down' => 218, 'up' => 38, 'ping' => 28, 'ip' => '100.64.18.25', 'sla' => 99.95],
+            ['down' => 265, 'up' => 42, 'ping' => 24, 'ip' => '100.64.18.26', 'sla' => 99.99],
         ];
 
         for ($i = 0; $i < 3; $i++) {
@@ -373,7 +399,7 @@ function get_user_starlink_kits($user_id) {
 }
 
 /**
- * Dedicated PKS Subscription Billing History (12 Jt/month, Feb 2025 to Present, All Lunas)
+ * Dedicated PKS Subscription Billing History (9 Jt/month, Feb 2025 to Present, All Lunas)
  */
 function get_pks_billing_history() {
     $months = [
@@ -406,8 +432,8 @@ function get_pks_billing_history() {
             'invoice_no' => $m['inv'],
             'period' => $m['period'],
             'description' => 'Dedicated Bandwidth Priority PKS (3x Starlink Gen 3 V4)',
-            'amount' => 12000000,
-            'amount_formatted' => 'Rp 12.000.000',
+            'amount' => 9000000,
+            'amount_formatted' => 'Rp 9.000.000',
             'status' => 'LUNAS',
             'paid_date' => $m['paid_date'],
             'payment_method' => 'Bank Mandiri Corporate Auto-Debit',

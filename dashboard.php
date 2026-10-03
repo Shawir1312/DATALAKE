@@ -21,11 +21,11 @@ if (!$current_user) {
 $user_kits = get_user_starlink_kits($current_user_id);
 $billing_history = get_pks_billing_history();
 
-// Distinct dynamic base telemetry for each of the 3 Starlink kits (190 - 300 Mbps)
+// Distinct dynamic base telemetry for each of the 3 Starlink kits (180 - 300 Mbps)
 $kit_profiles = [
-    ['min' => 268, 'max' => 298, 'up_min' => 45, 'up_max' => 52, 'ping_min' => 20, 'ping_max' => 24, 'jitter' => '1.4 ms'], // Terminal 1 - Jakarta HQ
-    ['min' => 192, 'max' => 236, 'up_min' => 34, 'up_max' => 40, 'ping_min' => 26, 'ping_max' => 32, 'jitter' => '2.1 ms'], // Terminal 2 - Balikpapan Hub
-    ['min' => 238, 'max' => 278, 'up_min' => 39, 'up_max' => 46, 'ping_min' => 23, 'ping_max' => 29, 'jitter' => '1.8 ms'], // Terminal 3 - Sorong Papua
+    ['min' => 268, 'max' => 298, 'up_min' => 45, 'up_max' => 52, 'ping_min' => 20, 'ping_max' => 24, 'jitter' => '1.4 ms'], // Terminal A
+    ['min' => 192, 'max' => 236, 'up_min' => 34, 'up_max' => 40, 'ping_min' => 26, 'ping_max' => 32, 'jitter' => '2.1 ms'], // Terminal B
+    ['min' => 238, 'max' => 278, 'up_min' => 39, 'up_max' => 46, 'ping_min' => 23, 'ping_max' => 29, 'jitter' => '1.8 ms'], // Terminal C
 ];
 
 foreach ($user_kits as $idx => &$k) {
@@ -308,7 +308,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                 </a>
                 <a href="dashboard.php?tab=billing" class="dash-nav-link <?= $tab === 'billing' ? 'active' : '' ?>">
                     <span class="material-symbols-outlined">receipt_long</span>
-                    Tagihan PKS 12 Jt
+                    Tagihan PKS 9 Jt
                     <span class="badge" style="background:#10b981;">Lunas</span>
                 </a>
             <?php else: ?>
@@ -367,7 +367,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                         case 'inquiries': echo 'Permintaan Konsultasi & Leads Starlink'; break;
                         case 'monitoring': echo 'Monitoring Real-Time 3 Kit Starlink Gen 3 V4'; break;
                         case 'telemetry': echo 'Statistik Koneksi, Speedtest & SLA Live'; break;
-                        case 'billing': echo 'Tagihan & Riwayat Pembayaran PKS (12 Jt/Bulan)'; break;
+                        case 'billing': echo 'Tagihan & Riwayat Pembayaran PKS (9 Jt/Bulan)'; break;
                         case 'pks': echo 'Kontrak Kerja Sama (PKS) Dedicated Enterprise'; break;
                         case 'profile': echo 'Pengaturan Profil & Keamanan Akun'; break;
                         default: echo $is_admin ? 'Ringkasan Dasbor Eksekutif' : 'Monitoring Starlink Dedicated PKS'; break;
@@ -422,7 +422,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                         </h2>
                         <div style="font-size: 13.5px; color: #94a3b8; display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
                             <span>No. PKS: <strong style="color: #00D2FF;">PKS-DLI/STARLINK-DEDICATED/2025-0082</strong></span>
-                            <span>Tagihan: <strong style="color: #10b981;">Rp 12.000.000 / Bulan (Semua LUNAS)</strong></span>
+                            <span>Tagihan: <strong style="color: #10b981;">Rp 9.000.000 / Bulan (Semua LUNAS)</strong></span>
                             <span>SLA: <strong style="color: #38bdf8;">99.98% Guaranteed</strong></span>
                         </div>
                     </div>
@@ -485,7 +485,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                 <div style="display: flex; justify-content: space-between; align-items: center; margin: 24px 0 16px;">
                     <h3 style="margin: 0; font-size: 18px; color: #0f172a; display: flex; align-items: center; gap: 8px;">
                         <span class="material-symbols-outlined" style="color: #0284c7;">router</span>
-                        Daftar Terminal 3 Kit Starlink Gen 3 V4 (Read-Only)
+                        Daftar 3 Kit Starlink Gen 3 V4 (Terminal A, B, C) (Read-Only)
                     </h3>
                     <span style="font-size: 12px; color: #64748b; background: #e2e8f0; padding: 4px 10px; border-radius: 999px;">
                         🔒 Parameter Dikelola NOC
@@ -493,12 +493,14 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                 </div>
 
                 <div class="pks-terminal-grid">
-                    <?php foreach ($user_kits as $idx => $kit): ?>
+                    <?php foreach ($user_kits as $idx => $kit): 
+                        $termLetter = chr(65 + $idx);
+                    ?>
                         <div class="pks-terminal-card">
                             <div class="pks-terminal-header">
                                 <div class="pks-terminal-title">
                                     <span class="material-symbols-outlined" style="color: #0099cc;">satellite_alt</span>
-                                    Terminal <?= str_pad($idx + 1, 2, '0', STR_PAD_LEFT) ?>
+                                    Terminal <?= $termLetter ?>
                                 </div>
                                 <span class="badge-pill badge-active" style="background:#ecfdf5; color:#047857; font-weight:700;">
                                     ● Online
@@ -536,7 +538,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                                 </div>
                             </div>
 
-                            <button type="button" onclick="runKitDiagnostic('<?= e($kit['kit_number']) ?>', 'Terminal <?= $idx + 1 ?>')" class="btn-dash btn-dash-sm" style="width: 100%; justify-content: center; background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1;">
+                            <button type="button" onclick="runKitDiagnostic('<?= e($kit['kit_number']) ?>', 'Terminal <?= $termLetter ?>')" class="btn-dash btn-dash-sm" style="width: 100%; justify-content: center; background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1;">
                                 <span class="material-symbols-outlined" style="font-size: 16px;">health_and_safety</span>
                                 Jalankan Diagnostik Terminal
                             </button>
@@ -557,103 +559,97 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
 
             <!-- TAB: TELEMETRY (STATISTIK, SPEEDTEST, SLA LIVE) -->
             <?php elseif ($tab === 'telemetry'): ?>
-                <!-- Speedtest Interactive Box -->
-                <div class="speedtest-box">
-                    <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #00D2FF; margin-bottom: 6px;">
-                        Data Lake Starlink Network Speedtest
-                    </div>
-                    <h2 style="margin: 0 0 16px; font-size: 24px;">Pengujian Bandwidth Real-Time (3 Kit Gen 3 V4)</h2>
-
-                    <!-- Terminal Selector Tabs -->
-                    <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 22px;">
-                        <button type="button" class="btn-term-select active" onclick="selectTestTerminal('all', this)">
-                            🌐 Semua 3 Kit (Agregasi)
-                        </button>
-                        <?php foreach ($user_kits as $idx => $kit): ?>
-                            <button type="button" class="btn-term-select" onclick="selectTestTerminal('<?= $idx ?>', this)">
-                                🛰️ Terminal <?= $idx + 1 ?> (<?= e($kit['kit_number']) ?>)
-                            </button>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <div class="speedtest-gauge" id="speedGauge">
-                        <div id="gaugeVal" style="font-size: 42px; font-weight: 800; color: #00D2FF; line-height: 1;"><?= $avg_live_down ?></div>
-                        <div id="gaugeUnit" style="font-size: 13px; color: #94a3b8; text-transform: uppercase; margin-top: 4px;">Mbps Download</div>
-                    </div>
-
-                    <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 24px; flex-wrap: wrap;">
-                        <div>
-                            <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Latensi (Ping)</div>
-                            <div style="font-size: 20px; font-weight: 700; color: #38bdf8;" id="testPing"><?= $avg_live_ping ?> ms</div>
+                <!-- Hero Banner Pengujian Per-Terminal -->
+                <div class="pks-hero-banner" style="background: linear-gradient(135deg, #07162c 0%, #0a2540 100%);">
+                    <div>
+                        <div class="pks-badge" style="background: rgba(0, 210, 255, 0.15); border-color: #00D2FF; color: #00D2FF;">
+                            <span class="material-symbols-outlined" style="font-size: 15px;">speed</span>
+                            Speedtest Dedicated Multi-Terminal
                         </div>
-                        <div>
-                            <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Upload Speed</div>
-                            <div style="font-size: 20px; font-weight: 700; color: #fbbf24;" id="testUp"><?= $avg_live_up ?> Mbps</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Jitter / Packet Loss</div>
-                            <div style="font-size: 20px; font-weight: 700; color: #10b981;" id="testJitter">1.8 ms / 0%</div>
+                        <h2 style="margin: 0 0 6px; font-size: 22px; color: #ffffff;">
+                            Pengujian Bandwidth Real-Time Per-Starlink (Terminal A, B, C)
+                        </h2>
+                        <div style="font-size: 13.5px; color: #94a3b8; display: flex; flex-wrap: wrap; gap: 16px;">
+                            <span>Hardware: <strong style="color: #ffffff;">Starlink Standard Gen 3 (V4)</strong></span>
+                            <span>Rentang Bandwidth: <strong style="color: #38bdf8;">180 – 300 Mbps (Independen)</strong></span>
+                            <span>Target SLA: <strong style="color: #10b981;">99.98% Guaranteed</strong></span>
                         </div>
                     </div>
-
-                    <button type="button" id="btnStartSpeedtest" onclick="startSpeedtest()" class="btn-dash btn-dash-primary" style="margin: 0 auto; padding: 12px 28px; font-size: 15px; font-weight: 700;">
-                        <span class="material-symbols-outlined">play_arrow</span>
-                        Jalankan Tes Kecepatan Realtime
-                    </button>
-                </div>
-
-                <!-- Live Matrix Telemetry 3 Kit Starlink (Beda Kecepatan & Berfluktuasi 180-300 Mbps) -->
-                <div style="margin: 24px 0 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
-                        <h3 style="margin: 0; font-size: 18px; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-                            <span class="material-symbols-outlined" style="color: #00D2FF;">cell_tower</span>
-                            Status Live Telemetri 3 Kit Starlink Gen 3 V4 (Kecepatan Mandiri)
-                        </h3>
-                        <span style="font-size: 12px; color: #059669; font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 4px 12px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px;">
+                    <div style="text-align: right;">
+                        <span style="font-size: 12px; color: #10b981; font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 6px 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px;">
                             <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; animation: otpPulse 1.5s infinite;"></span>
-                            Real-time Telemetry Active (180 – 300 Mbps)
+                            3 Terminal Online &amp; Siap Diuji
                         </span>
                     </div>
+                </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
-                        <?php foreach ($user_kits as $idx => $kit): ?>
-                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); position: relative; overflow: hidden;">
-                                <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #00D2FF, #0077b6);"></div>
-                                
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <div style="font-weight: 800; font-size: 15px; color: #07162c;">
-                                        Terminal <?= $idx + 1 ?> (<?= e($kit['kit_number']) ?>)
+                <!-- 3 Terminal Dedicated Speedtest Cards (Terminal A, Terminal B, Terminal C) -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                    <?php foreach ($user_kits as $idx => $kit): 
+                        $letter = chr(65 + $idx); // 'A', 'B', 'C'
+                    ?>
+                        <div class="dash-card term-test-card" id="term-card-<?= $idx ?>" style="border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.04); position: relative; display: flex; flex-direction: column;">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #00D2FF, #0284c7);"></div>
+                            
+                            <!-- Header Card -->
+                            <div style="padding: 18px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 17px; font-weight: 800; color: #07162c; display: flex; align-items: center; gap: 8px;">
+                                        <span class="material-symbols-outlined" style="color: #0099cc; font-size: 22px;">satellite_alt</span>
+                                        Terminal <?= $letter ?>
                                     </div>
-                                    <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #059669; background: #ecfdf5; padding: 2px 8px; border-radius: 6px;">
-                                        ● Online
-                                    </span>
+                                    <div style="font-size: 12px; color: #64748b; margin-top: 3px;">
+                                        Kit: <strong style="font-family: monospace; color: #0284c7;"><?= e($kit['kit_number']) ?></strong>
+                                    </div>
                                 </div>
-                                
-                                <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">
-                                    <?= e($kit['location']) ?>
+                                <span class="badge-pill badge-active" style="background: #ecfdf5; color: #047857; font-weight: 700; font-size: 11.5px;">
+                                    ● Online
+                                </span>
+                            </div>
+
+                            <!-- Body with Live Gauge & Metrics -->
+                            <div style="padding: 20px; flex: 1; display: flex; flex-direction: column;">
+                                <!-- Live Speed Readout Box -->
+                                <div style="text-align: center; padding: 20px 14px; background: linear-gradient(135deg, #040d1a 0%, #071a33 100%); border-radius: 12px; color: #fff; margin-bottom: 18px; border: 1px solid rgba(0, 210, 255, 0.2); box-shadow: 0 6px 18px rgba(0,0,0,0.15); position: relative; overflow: hidden;" id="term-box-<?= $idx ?>">
+                                    <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #38bdf8; margin-bottom: 4px;" id="term-status-<?= $idx ?>">
+                                        Kecepatan Unduh Real-Time
+                                    </div>
+                                    <div style="font-size: 46px; font-weight: 800; color: #00D2FF; line-height: 1.05; letter-spacing: -1px;" id="term-down-<?= $idx ?>">
+                                        <?= $kit['live_down'] ?>
+                                    </div>
+                                    <div style="font-size: 12px; color: #94a3b8; font-weight: 600; margin-top: 4px; text-transform: uppercase;" id="term-unit-<?= $idx ?>">
+                                        Mbps Download (Terminal <?= $letter ?>)
+                                    </div>
                                 </div>
 
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center;">
+                                <!-- 4 Live Metrics Grid -->
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; text-align: center;">
                                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
-                                        <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Download</div>
-                                        <div style="font-size: 20px; font-weight: 800; color: #0284c7;" id="tele-down-<?= $idx ?>"><?= $kit['live_down'] ?> <small style="font-size: 11px;">Mbps</small></div>
-                                    </div>
-                                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
-                                        <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Upload</div>
-                                        <div style="font-size: 20px; font-weight: 800; color: #d97706;" id="tele-up-<?= $idx ?>"><?= $kit['live_up'] ?> <small style="font-size: 11px;">Mbps</small></div>
+                                        <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Upload Speed</div>
+                                        <div style="font-size: 18px; font-weight: 800; color: #d97706;" id="term-up-<?= $idx ?>"><?= $kit['live_up'] ?> <small style="font-size: 11px;">Mbps</small></div>
                                     </div>
                                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
                                         <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Latensi (Ping)</div>
-                                        <div style="font-size: 18px; font-weight: 800; color: #059669;" id="tele-ping-<?= $idx ?>"><?= $kit['live_ping'] ?> <small style="font-size: 11px;">ms</small></div>
+                                        <div style="font-size: 18px; font-weight: 800; color: #0284c7;" id="term-ping-<?= $idx ?>"><?= $kit['live_ping'] ?> <small style="font-size: 11px;">ms</small></div>
+                                    </div>
+                                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
+                                        <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Jitter / Packet Loss</div>
+                                        <div style="font-size: 14px; font-weight: 700; color: #10b981;" id="term-jitter-<?= $idx ?>"><?= $kit['live_jitter'] ?> / 0%</div>
                                     </div>
                                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 8px;">
                                         <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">SLA Uptime</div>
-                                        <div style="font-size: 18px; font-weight: 800; color: #0f172a;"><?= e($kit['sla_percent']) ?>%</div>
+                                        <div style="font-size: 14px; font-weight: 800; color: #0f172a;"><?= e($kit['sla_percent']) ?>%</div>
                                     </div>
                                 </div>
+
+                                <!-- Button to Test THIS Terminal -->
+                                <button type="button" id="btnTestTerm_<?= $idx ?>" onclick="testSingleTerminal(<?= $idx ?>, '<?= $letter ?>')" class="btn-dash btn-dash-primary" style="width: 100%; justify-content: center; font-size: 14px; font-weight: 700; padding: 12px; margin-top: auto;">
+                                    <span class="material-symbols-outlined" style="font-size: 18px;">speed</span>
+                                    Cek Speedtest Terminal <?= $letter ?>
+                                </button>
                             </div>
-                        <?php endforeach; ?>
-                    </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
                 <!-- 24-Hour Traffic Curve & SLA 30-Day Grid -->
@@ -725,7 +721,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                     </div>
                 </div>
 
-            <!-- TAB: BILLING (TAGIHAN & INVOICE PKS 12 JT/BULAN - LUNAS) -->
+            <!-- TAB: BILLING (TAGIHAN & INVOICE PKS 9 JT/BULAN - LUNAS) -->
             <?php elseif ($tab === 'billing'): ?>
                 <!-- Summary Card -->
                 <div class="pks-hero-banner" style="background: linear-gradient(135deg, #07162c 0%, #0f3d64 100%);">
@@ -735,12 +731,12 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                             STATUS: SEMUA TAGIHAN TELAH LUNAS
                         </div>
                         <h2 style="margin: 0 0 6px; font-size: 24px; color: #ffffff;">
-                            Tagihan Langganan: Rp 12.000.000 / Bulan
+                            Tagihan Langganan: Rp 9.000.000 / Bulan
                         </h2>
                         <div style="font-size: 13.5px; color: #94a3b8; display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
                             <span>Paket: <strong style="color: #ffffff;">Dedicated PKS Enterprise (3x Starlink Gen 3 V4)</strong></span>
                             <span>Riwayat Aktif: <strong style="color: #38bdf8;">Februari 2025 s/d Sekarang (21 Bulan)</strong></span>
-                            <span>Total Pembayaran: <strong style="color: #10b981;">Rp 252.000.000 (Lunas)</strong></span>
+                            <span>Total Pembayaran: <strong style="color: #10b981;">Rp 189.000.000 (Lunas)</strong></span>
                         </div>
                     </div>
                     <div>
@@ -839,7 +835,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                                 </div>
                                 <div>
                                     <div style="font-size: 11px; text-transform: uppercase; color: #64748b;">Biaya Berlangganan Bulanan</div>
-                                    <div style="font-size: 16px; font-weight: 700; color: #10b981;">Rp 12.000.000,- / Bulan (Nett)</div>
+                                    <div style="font-size: 16px; font-weight: 700; color: #10b981;">Rp 9.000.000,- / Bulan (Nett)</div>
                                 </div>
                                 <div>
                                     <div style="font-size: 11px; text-transform: uppercase; color: #64748b;">Komitmen SLA Ketersediaan</div>
@@ -906,7 +902,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                     <div class="stat-card">
                         <div class="stat-info">
                             <span class="stat-label">Klien PKS Dedicated</span>
-                            <span class="stat-value">Rp 12 Jt/bln</span>
+                            <span class="stat-value">Rp 9 Jt/bln</span>
                             <span class="stat-note" style="color:#10b981;">Semua Lunas</span>
                         </div>
                         <div class="stat-icon-wrap stat-icon-amber">
@@ -1399,31 +1395,31 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                         <tbody>
                             <tr style="border-bottom: 1px solid #f1f5f9;">
                                 <td style="padding: 12px 10px;">
-                                    <strong>Langganan Dedicated Starlink Bandwidth Priority</strong><br>
-                                    <small style="color: #64748b;">Terminal 1 (<?= e($user_kits[0]['kit_number'] ?? 'KIT-1') ?>) — <?= e($user_kits[0]['location'] ?? '') ?></small>
+                                    <strong>Langganan Dedicated Starlink Bandwidth Priority — Terminal A</strong><br>
+                                    <small style="color: #64748b;">Perangkat: Starlink Gen 3 V4 (<?= e($user_kits[0]['kit_number'] ?? 'KIT4GKRZ8Y2') ?>) — Terminal A</small>
                                 </td>
                                 <td style="padding: 12px 10px; text-align: center;">1 Bulan</td>
-                                <td style="padding: 12px 10px; text-align: right;">Rp 4.000.000</td>
+                                <td style="padding: 12px 10px; text-align: right;">Rp 3.000.000</td>
                             </tr>
                             <tr style="border-bottom: 1px solid #f1f5f9;">
                                 <td style="padding: 12px 10px;">
-                                    <strong>Langganan Dedicated Starlink Bandwidth Priority</strong><br>
-                                    <small style="color: #64748b;">Terminal 2 (<?= e($user_kits[1]['kit_number'] ?? 'KIT-2') ?>) — <?= e($user_kits[1]['location'] ?? '') ?></small>
+                                    <strong>Langganan Dedicated Starlink Bandwidth Priority — Terminal B</strong><br>
+                                    <small style="color: #64748b;">Perangkat: Starlink Gen 3 V4 (<?= e($user_kits[1]['kit_number'] ?? 'KITTLGAT3S7') ?>) — Terminal B</small>
                                 </td>
                                 <td style="padding: 12px 10px; text-align: center;">1 Bulan</td>
-                                <td style="padding: 12px 10px; text-align: right;">Rp 4.000.000</td>
+                                <td style="padding: 12px 10px; text-align: right;">Rp 3.000.000</td>
                             </tr>
                             <tr style="border-bottom: 2px solid #0f172a;">
                                 <td style="padding: 12px 10px;">
-                                    <strong>Langganan Dedicated Starlink Bandwidth Priority</strong><br>
-                                    <small style="color: #64748b;">Terminal 3 (<?= e($user_kits[2]['kit_number'] ?? 'KIT-3') ?>) — <?= e($user_kits[2]['location'] ?? '') ?></small>
+                                    <strong>Langganan Dedicated Starlink Bandwidth Priority — Terminal C</strong><br>
+                                    <small style="color: #64748b;">Perangkat: Starlink Gen 3 V4 (<?= e($user_kits[2]['kit_number'] ?? 'KITPT2B5P59') ?>) — Terminal C</small>
                                 </td>
                                 <td style="padding: 12px 10px; text-align: center;">1 Bulan</td>
-                                <td style="padding: 12px 10px; text-align: right;">Rp 4.000.000</td>
+                                <td style="padding: 12px 10px; text-align: right;">Rp 3.000.000</td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 14px 10px; text-align: right; font-weight: 800; font-size: 15px;">TOTAL PEMBAYARAN:</td>
-                                <td style="padding: 14px 10px; text-align: right; font-weight: 800; font-size: 16px; color: #047857;">Rp 12.000.000</td>
+                                <td style="padding: 14px 10px; text-align: right; font-weight: 800; font-size: 16px; color: #047857;">Rp 9.000.000</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1529,114 +1525,61 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
         { down: parseFloat('<?= $user_kits[2]["live_down"] ?? 263.7 ?>'), up: parseFloat('<?= $user_kits[2]["live_up"] ?? 41.5 ?>'), ping: parseInt('<?= $user_kits[2]["live_ping"] ?? 25 ?>'), min: 238, max: 279, upMin: 38, upMax: 46, pMin: 23, pMax: 29 }
     ];
 
-    // Interactive Speed Test Simulation with Terminal Selector
-    let activeTestTerminal = 'all';
-    let speedtestInterval = null;
+    // Dedicated Per-Terminal Speedtest function (Terminal A, B, C)
+    const activeTestIntervals = {};
 
-    function selectTestTerminal(termKey, btnElem) {
-        activeTestTerminal = termKey;
-        document.querySelectorAll('.btn-term-select').forEach(b => b.classList.remove('active'));
-        if (btnElem) btnElem.classList.add('active');
+    function testSingleTerminal(idx, letter) {
+        const btn = document.getElementById('btnTestTerm_' + idx);
+        const downElem = document.getElementById('term-down-' + idx);
+        const upElem = document.getElementById('term-up-' + idx);
+        const pingElem = document.getElementById('term-ping-' + idx);
+        const jitterElem = document.getElementById('term-jitter-' + idx);
+        const statusElem = document.getElementById('term-status-' + idx);
 
-        const valElem = document.getElementById('gaugeVal');
-        const pingElem = document.getElementById('testPing');
-        const upElem = document.getElementById('testUp');
-        const unitElem = document.getElementById('gaugeUnit');
-
-        if (valElem) {
-            if (termKey === 'all') {
-                const avgD = (kitData.reduce((acc, cur) => acc + cur.down, 0) / kitData.length).toFixed(1);
-                valElem.innerText = avgD;
-                if (unitElem) unitElem.innerText = 'Mbps Download (Agregasi 3 Kit)';
-            } else {
-                const idx = parseInt(termKey);
-                if (kitData[idx]) {
-                    valElem.innerText = kitData[idx].down.toFixed(1);
-                    if (pingElem) pingElem.innerText = kitData[idx].ping + ' ms';
-                    if (upElem) upElem.innerText = kitData[idx].up.toFixed(1) + ' Mbps';
-                    if (unitElem) unitElem.innerText = 'Mbps Download (Terminal ' + (idx + 1) + ')';
-                }
-            }
-        }
-    }
-
-    function startSpeedtest() {
-        const gauge = document.getElementById('speedGauge');
-        const valElem = document.getElementById('gaugeVal');
-        const unitElem = document.getElementById('gaugeUnit');
-        const btn = document.getElementById('btnStartSpeedtest');
-        const testPing = document.getElementById('testPing');
-        const testUp = document.getElementById('testUp');
-        const testJitter = document.getElementById('testJitter');
-
-        if (!gauge || !valElem || !btn) return;
+        if (!btn || !downElem) return;
 
         btn.disabled = true;
-        btn.innerHTML = '<span class="material-symbols-outlined">hourglass_top</span> Menguji Koneksi...';
-        gauge.classList.add('testing');
+        btn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px; animation: spinGauge 1s linear infinite;">sync</span> Menguji Terminal ' + letter + '...';
+        if (statusElem) statusElem.innerText = 'Mengukur Latensi Satelit...';
 
-        // Target randomized speed between 190.0 and 300.0 Mbps (never identical)
-        let targetSpeed, targetPing, targetUp, targetJitter;
-        if (activeTestTerminal === '0') {
-            targetSpeed = (265 + Math.random() * 33).toFixed(1); // 265 - 298
-            targetPing = Math.floor(20 + Math.random() * 4);
-            targetUp = (45 + Math.random() * 7).toFixed(1);
-            targetJitter = (1.2 + Math.random() * 0.4).toFixed(1);
-        } else if (activeTestTerminal === '1') {
-            targetSpeed = (192 + Math.random() * 44).toFixed(1); // 192 - 236
-            targetPing = Math.floor(26 + Math.random() * 6);
-            targetUp = (34 + Math.random() * 6).toFixed(1);
-            targetJitter = (1.8 + Math.random() * 0.5).toFixed(1);
-        } else if (activeTestTerminal === '2') {
-            targetSpeed = (238 + Math.random() * 40).toFixed(1); // 238 - 278
-            targetPing = Math.floor(23 + Math.random() * 6);
-            targetUp = (39 + Math.random() * 7).toFixed(1);
-            targetJitter = (1.6 + Math.random() * 0.4).toFixed(1);
-        } else {
-            // All terminals random anywhere in 190 - 300 Mbps
-            targetSpeed = (190 + Math.random() * 109).toFixed(1);
-            targetPing = Math.floor(20 + Math.random() * 11);
-            targetUp = (36 + Math.random() * 15).toFixed(1);
-            targetJitter = (1.4 + Math.random() * 0.8).toFixed(1);
-        }
+        const k = kitData[idx] || { min: 200, max: 280, upMin: 35, upMax: 48, pMin: 20, pMax: 28 };
+        const targetDown = (k.min + Math.random() * (k.max - k.min)).toFixed(1);
+        const targetUp = (k.upMin + Math.random() * (k.upMax - k.upMin)).toFixed(1);
+        const targetPing = Math.floor(k.pMin + Math.random() * (k.pMax - k.pMin + 1));
+        const targetJitter = (1.2 + Math.random() * 0.8).toFixed(1);
 
-        // Step 1: Ping
-        if (unitElem) unitElem.innerText = 'Mengukur Latensi Satelit...';
-        valElem.innerText = '0.0';
+        downElem.innerText = '0.0';
 
         setTimeout(() => {
-            if (testPing) testPing.innerText = targetPing + ' ms';
-            if (unitElem) unitElem.innerText = 'Menguji Download Speed...';
+            if (pingElem) pingElem.innerHTML = targetPing + ' <small style="font-size: 11px;">ms</small>';
+            if (statusElem) statusElem.innerText = 'Menguji Download Speed...';
 
-            let currentSpeed = 30;
-            const targetNum = parseFloat(targetSpeed);
-            clearInterval(speedtestInterval);
-            
-            speedtestInterval = setInterval(() => {
-                currentSpeed += Math.floor(Math.random() * 26) + 14;
-                if (currentSpeed >= targetNum) {
-                    currentSpeed = targetNum;
-                    clearInterval(speedtestInterval);
+            let cur = 20;
+            const targetVal = parseFloat(targetDown);
+            if (activeTestIntervals[idx]) clearInterval(activeTestIntervals[idx]);
 
-                    // Step 2: Upload
-                    if (unitElem) unitElem.innerText = 'Menguji Upload Speed...';
+            activeTestIntervals[idx] = setInterval(() => {
+                cur += Math.floor(Math.random() * 28) + 16;
+                if (cur >= targetVal) {
+                    cur = targetVal;
+                    clearInterval(activeTestIntervals[idx]);
+
+                    if (statusElem) statusElem.innerText = 'Menguji Upload Speed...';
                     setTimeout(() => {
-                        if (testUp) testUp.innerText = targetUp + ' Mbps';
-                        if (testJitter) testJitter.innerText = targetJitter + ' ms / 0%';
-                        if (unitElem) unitElem.innerText = 'Mbps Download (' + (activeTestTerminal === 'all' ? 'Agregasi' : 'Terminal ' + (parseInt(activeTestTerminal) + 1)) + ')';
-                        valElem.innerText = targetSpeed;
-                        gauge.classList.remove('testing');
+                        if (upElem) upElem.innerHTML = targetUp + ' <small style="font-size: 11px;">Mbps</small>';
+                        if (jitterElem) jitterElem.innerText = targetJitter + ' ms / 0%';
+                        if (statusElem) statusElem.innerText = 'Hasil Pengujian Terminal ' + letter + ' (Optimal)';
+                        downElem.innerText = targetDown;
                         btn.disabled = false;
-                        btn.innerHTML = '<span class="material-symbols-outlined">refresh</span> Jalankan Ulang Pengujian (' + targetSpeed + ' Mbps)';
-                    }, 1000);
+                        btn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">refresh</span> Uji Ulang Terminal ' + letter + ' (' + targetDown + ' Mbps)';
+                    }, 800);
                 }
-                valElem.innerText = currentSpeed.toFixed(1);
-            }, 50);
-
-        }, 600);
+                downElem.innerText = cur.toFixed(1);
+            }, 45);
+        }, 500);
     }
 
-    // Dynamic Micro-fluctuation for Real-Time Live Feel (Different for each Starlink Kit, 180 - 300 Mbps)
+    // Dynamic Micro-fluctuation for Real-Time Live Feel (Distinct for each Starlink Kit, 180 - 300 Mbps)
     setInterval(() => {
         kitData.forEach((k, idx) => {
             const dDelta = (Math.random() * 6 - 3);
@@ -1659,15 +1602,18 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
             const kp = document.getElementById('kit-ping-' + idx);
             if (kp) kp.innerHTML = k.ping + '<small style="font-size:10px;">ms</small>';
 
-            // Update Tab 2 elements if present
-            const td = document.getElementById('tele-down-' + idx);
-            if (td) td.innerHTML = k.down.toFixed(1) + ' <small style="font-size: 11px;">Mbps</small>';
-            
-            const tu = document.getElementById('tele-up-' + idx);
-            if (tu) tu.innerHTML = k.up.toFixed(1) + ' <small style="font-size: 11px;">Mbps</small>';
-            
-            const tp = document.getElementById('tele-ping-' + idx);
-            if (tp) tp.innerHTML = k.ping + ' <small style="font-size: 11px;">ms</small>';
+            // Update Tab 2 elements if present (only when not actively in a manual speed test)
+            const btn = document.getElementById('btnTestTerm_' + idx);
+            if (!btn || !btn.disabled) {
+                const td = document.getElementById('term-down-' + idx);
+                if (td) td.innerText = k.down.toFixed(1);
+                
+                const tu = document.getElementById('term-up-' + idx);
+                if (tu) tu.innerHTML = k.up.toFixed(1) + ' <small style="font-size: 11px;">Mbps</small>';
+                
+                const tp = document.getElementById('term-ping-' + idx);
+                if (tp) tp.innerHTML = k.ping + ' <small style="font-size: 11px;">ms</small>';
+            }
         });
 
         // Update overall average metrics in Tab 1
