@@ -1,0 +1,10 @@
+# System & OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Sensitive runtime configurations
+config/installed.lock
+
+# Temporary scratch files
+scratch/
