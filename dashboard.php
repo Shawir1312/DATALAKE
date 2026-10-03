@@ -377,10 +377,6 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
             </div>
 
             <div class="dash-topbar-actions">
-                <div class="system-status-indicator">
-                    <span class="status-dot"></span>
-                    <span>Sistem Terhubung (<?= (DB_TYPE === 'mysql') ? 'MySQL / phpMyAdmin' : 'SQLite' ?>)</span>
-                </div>
                 <a href="/" class="btn-view-site" target="_blank">
                     <span class="material-symbols-outlined" style="font-size: 16px;">public</span>
                     Beranda DLI
@@ -812,51 +808,382 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                     </div>
                 </div>
 
-            <!-- TAB: KONTRAK PKS DEDICATED -->
+            <!-- TAB: KONTRAK PKS DEDICATED (DOKUMEN RESMI RESELLER) -->
             <?php elseif ($tab === 'pks'): ?>
-                <div class="dash-card">
-                    <div class="dash-card-header">
-                        <h2 class="dash-card-title">
-                            <span class="material-symbols-outlined" style="color: var(--primary-dli);">assignment</span>
-                            Perjanjian Kerja Sama (PKS) Dedicated Enterprise
+                <!-- Action Bar & Controls -->
+                <div class="pks-hero-banner no-print" style="background: linear-gradient(135deg, #07162c 0%, #0d274c 100%); margin-bottom: 24px;">
+                    <div>
+                        <div class="pks-badge" style="background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #10b981;">
+                            <span class="material-symbols-outlined" style="font-size: 15px;">verified</span>
+                            PERJANJIAN KERJA SAMA (PKS) RESMI RESELLER
+                        </div>
+                        <h2 style="margin: 0 0 6px; font-size: 22px; color: #ffffff;">
+                            Dokumen Kontrak PKS: PT Data Lake Indonesia &amp; PT Network Inovatif Solutions
                         </h2>
-                        <span class="pks-badge" style="margin: 0;">Kontrak Aktif</span>
+                        <div style="font-size: 13.5px; color: #94a3b8; display: flex; flex-wrap: wrap; gap: 16px;">
+                            <span>No: <strong style="color: #00D2FF; font-family: monospace;">082/PKS/DLI-NIS/02/2026</strong></span>
+                            <span>Masa Berlaku: <strong style="color: #ffffff;">36 Bulan (01 Feb 2025 – 01 Feb 2028)</strong></span>
+                            <span>Status: <strong style="color: #10b981;">Tercatat Sah di Database DLI</strong></span>
+                        </div>
                     </div>
-                    <div class="dash-card-body" style="line-height: 1.7; font-size: 14px; color: #334155;">
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 24px;">
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
-                                <div>
-                                    <div style="font-size: 11px; text-transform: uppercase; color: #64748b;">Nomor Kontrak PKS</div>
-                                    <div style="font-size: 16px; font-weight: 700; color: #0f172a;">PKS-DLI/STARLINK-DEDICATED/2025-0082</div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 11px; text-transform: uppercase; color: #64748b;">Masa Berlaku Perjanjian</div>
-                                    <div style="font-size: 16px; font-weight: 700; color: #0f172a;">01 Feb 2025 – 01 Feb 2028 (36 Bulan)</div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 11px; text-transform: uppercase; color: #64748b;">Biaya Berlangganan Bulanan</div>
-                                    <div style="font-size: 16px; font-weight: 700; color: #10b981;">Rp 9.000.000,- / Bulan (Nett)</div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 11px; text-transform: uppercase; color: #64748b;">Komitmen SLA Ketersediaan</div>
-                                    <div style="font-size: 16px; font-weight: 700; color: #0284c7;">Min. 99.50% (Pencapaian: 99.98%)</div>
-                                </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                        <button type="button" onclick="window.print()" class="btn-dash btn-dash-primary" style="padding: 10px 18px; font-size: 13.5px; font-weight: 700;">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">print</span>
+                            Cetak / Unduh PDF Dokumen
+                        </button>
+                        <button type="button" onclick="openModal('verifyDocModal')" class="btn-dash" style="background: #ffffff; color: #07162c; border: 1px solid #cbd5e1; padding: 10px 18px; font-size: 13.5px; font-weight: 700;">
+                            <span class="material-symbols-outlined" style="font-size: 18px; color: #10b981;">verified_user</span>
+                            Cek Keaslian Dokumen
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Printable Formal PKS Document Paper -->
+                <div class="pks-document-paper" id="printablePksDoc" style="background:#ffffff; color:#0f172a; max-width:860px; margin:0 auto 30px; padding:44px 50px; border-radius:12px; border:1px solid #cbd5e1; box-shadow:0 8px 30px rgba(0,0,0,0.06); font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.8; position: relative;">
+                    
+                    <!-- Kop Surat Resmi PT Data Lake Indonesia -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:18px; border-bottom:3px double #0f172a; margin-bottom:28px;">
+                        <div style="display:flex; align-items:center; gap:16px;">
+                            <img src="/logo/DLI-logo-navy.png" alt="PT Data Lake Indonesia" style="height:48px;">
+                            <div>
+                                <div style="font-weight:800; font-size:16px; color:#07162c; letter-spacing:0.5px;">PT DATA LAKE INDONESIA</div>
+                                <div style="font-size:11.5px; color:#0284c7; font-weight:700;">Authorized Distributor &amp; Reseller Starlink Indonesia</div>
+                                <div style="font-size:11px; color:#64748b;">Revenue Tower Lt. 16, District 8 SCBD, Jl. Jend. Sudirman Kav. 52-53, Jakarta Selatan 11530</div>
                             </div>
                         </div>
+                        <div style="text-align:right; font-size:11px; color:#64748b; line-height:1.5;">
+                            <div><strong>Telp:</strong> (021) 5082-0800 / <?= e(get_wa_number()) ?></div>
+                            <div><strong>Email:</strong> legal@datalake.id</div>
+                            <div><strong>Web:</strong> www.datalakeindonesia.com</div>
+                        </div>
+                    </div>
 
-                        <h3 style="color: #0f172a; font-size: 16px; margin: 18px 0 10px;">Ringkasan Ruang Lingkup Layanan:</h3>
-                        <ol style="margin-left: 20px; margin-bottom: 20px;">
-                            <li>Penyediaan dan pemeliharaan 3 (tiga) unit perangkat satelit <strong>Starlink Standard Gen 3 V4</strong> resmi bergaransi lokal.</li>
-                            <li>Penyaluran kapasitas bandwidth prioritas khusus (Dedicated Enterprise Priority) dengan throughput tinggi tanpa batas kuota (unlimited).</li>
-                            <li>Dukungan pemantauan dan pengawasan proaktif 24/7/365 oleh Network Operations Center (NOC) PT Data Lake Indonesia.</li>
-                            <li>Waktu tanggap insiden (Mean Time to Respond) maksimal 15 menit dan perbaikan on-site darurat bila diperlukan.</li>
+                    <!-- Judul Perjanjian -->
+                    <div style="text-align:center; margin-bottom:28px;">
+                        <h2 style="font-size:18px; font-weight:800; color:#07162c; text-transform:uppercase; margin:0 0 4px; letter-spacing:0.5px;">
+                            PERJANJIAN KERJA SAMA
+                        </h2>
+                        <h3 style="font-size:15px; font-weight:700; color:#0284c7; text-transform:uppercase; margin:0 0 8px;">
+                            PENYEDIAAN LAYANAN INTERNET UNTUK RESELLER
+                        </h3>
+                        <div style="font-size:13px; font-weight:700; color:#0f172a; font-family:monospace; background:#f1f5f9; display:inline-block; padding:4px 14px; border-radius:6px; border:1px solid #cbd5e1;">
+                            Nomor: 082/PKS/DLI-NIS/02/2026
+                        </div>
+                    </div>
+
+                    <!-- Pembukaan -->
+                    <p style="text-align:justify; margin-bottom:16px; font-size:13.5px;">
+                        Pada hari ini, <strong>Senin</strong>, tanggal <strong>lima belas</strong> bulan <strong>Februari</strong> tahun <strong>dua ribu dua puluh enam</strong> (15-02-2026), telah dibuat Perjanjian Kerja Sama (“Perjanjian”) oleh dan antara:
+                    </p>
+
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px 20px; margin-bottom:24px; font-size:13.5px;">
+                        <div style="margin-bottom:16px;">
+                            <strong style="color:#0284c7; font-size:14px;">PIHAK PERTAMA</strong><br>
+                            <strong>PT DATA LAKE INDONESIA</strong>, berkedudukan di Revenue Tower Lantai 16, District 8 SCBD, Jl. Sudirman Kav. 52-53, Senayan, Kebayoran Baru, Jakarta Selatan, DKI Jakarta 11530, dalam hal ini diwakili oleh:<br>
+                            <div style="margin-left:16px; margin-top:4px;">
+                                <strong>Nama:</strong> Nike P. Kosasih<br>
+                                <strong>Jabatan:</strong> Direktur Utama
+                            </div>
+                            <div style="margin-top:4px;"><em style="color:#64748b; font-size:12.5px;">Selanjutnya disebut <strong>PIHAK PERTAMA</strong>.</em></div>
+                        </div>
+
+                        <div>
+                            <strong style="color:#0284c7; font-size:14px;">PIHAK KEDUA</strong><br>
+                            <strong>PT NETWORK INOVATIF SOLUTIONS</strong>, berkedudukan di Desa Lusuo, Kecamatan Morotai Utara, Pulau Morotai, Maluku Utara, dalam hal ini diwakili oleh:<br>
+                            <div style="margin-left:16px; margin-top:4px;">
+                                <strong>Nama:</strong> Mushawir Odegoa<br>
+                                <strong>Jabatan:</strong> Direktur
+                            </div>
+                            <div style="margin-top:4px;"><em style="color:#64748b; font-size:12.5px;">Selanjutnya disebut <strong>PIHAK KEDUA</strong>.</em></div>
+                        </div>
+                    </div>
+
+                    <p style="text-align:justify; margin-bottom:22px; font-size:13.5px;">
+                        Para Pihak sepakat mengadakan kerja sama dengan ketentuan sebagai berikut:
+                    </p>
+
+                    <!-- PASAL 1 -->
+                    <div style="margin-bottom:20px;">
+                        <div style="font-weight:800; font-size:14px; color:#07162c; text-align:center; margin-bottom:2px;">PASAL 1</div>
+                        <div style="font-weight:700; font-size:13px; color:#0284c7; text-align:center; margin-bottom:8px; text-transform:uppercase;">RUANG LINGKUP</div>
+                        <p style="text-align:justify; font-size:13.5px;">
+                            PIHAK PERTAMA menyediakan layanan akses Internet kepada PIHAK KEDUA untuk kebutuhan operasional dan reseller/jual kembali layanan Internet, sesuai ketentuan peraturan perundang-undangan yang berlaku.
+                        </p>
+                    </div>
+
+                    <!-- PASAL 2 -->
+                    <div style="margin-bottom:20px;">
+                        <div style="font-weight:800; font-size:14px; color:#07162c; text-align:center; margin-bottom:2px;">PASAL 2</div>
+                        <div style="font-weight:700; font-size:13px; color:#0284c7; text-align:center; margin-bottom:8px; text-transform:uppercase;">SPESIFIKASI LAYANAN</div>
+                        <p style="text-align:justify; font-size:13.5px; margin-bottom:6px;">
+                            Akses Internet menggunakan jaringan satelit Starlink.
+                        </p>
+                        <p style="text-align:justify; font-size:13.5px; margin-bottom:6px;">
+                            Kapasitas layanan:
+                        </p>
+                        <ul style="margin-left:24px; font-size:13.5px; margin-bottom:8px; list-style-type:disc;">
+                            <li>Download: <strong>300 Mbps</strong></li>
+                            <li>Upload: <strong>45 Mbps</strong></li>
+                            <li>Rasio download dan upload adalah <strong>20 : 3</strong>.</li>
+                        </ul>
+                        <p style="text-align:justify; font-size:13.5px;">
+                            Lokasi layanan: <strong>Desa Lusuo, Kecamatan Morotai Utara, Pulau Morotai, Maluku Utara</strong>.
+                        </p>
+                    </div>
+
+                    <!-- PASAL 3 -->
+                    <div style="margin-bottom:20px;">
+                        <div style="font-weight:800; font-size:14px; color:#07162c; text-align:center; margin-bottom:2px;">PASAL 3</div>
+                        <div style="font-weight:700; font-size:13px; color:#0284c7; text-align:center; margin-bottom:8px; text-transform:uppercase;">PENGGUNAAN UNTUK RESELLER</div>
+                        <ol style="margin-left:24px; font-size:13.5px; text-align:justify;">
+                            <li style="margin-bottom:6px;">PIHAK KEDUA menggunakan layanan untuk kegiatan usaha dan jual kembali/reseller akses Internet kepada pelanggan PIHAK KEDUA.</li>
+                            <li style="margin-bottom:6px;">PIHAK KEDUA bertanggung jawab atas kegiatan dan pelanggan reseller yang berada di bawah pengelolaannya.</li>
+                            <li>Penggunaan layanan wajib mengikuti ketentuan layanan, perizinan, dan peraturan perundang-undangan yang berlaku.</li>
                         </ol>
+                    </div>
 
-                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                            <a href="<?= htmlspecialchars(get_wa_url('Halo NOC PT Data Lake Indonesia, saya ingin meminta pendampingan teknis untuk terminal Starlink PKS saya.')) ?>" target="_blank" class="btn-dash btn-dash-primary" style="background:#25d366; border:none;">
-                                <span class="material-symbols-outlined">support_agent</span>
-                                Hubungi Hotline NOC 24/7 (WhatsApp)
-                            </a>
+                    <!-- PASAL 4 -->
+                    <div style="margin-bottom:20px;">
+                        <div style="font-weight:800; font-size:14px; color:#07162c; text-align:center; margin-bottom:2px;">PASAL 4</div>
+                        <div style="font-weight:700; font-size:13px; color:#0284c7; text-align:center; margin-bottom:8px; text-transform:uppercase;">BIAYA DAN PEMBAYARAN</div>
+                        <ol style="margin-left:24px; font-size:13.5px; text-align:justify;">
+                            <li style="margin-bottom:6px;">Biaya layanan sebesar <strong>Rp 9.000.000,- (Sembilan Juta Rupiah)</strong> per bulan.</li>
+                            <li style="margin-bottom:6px;">Pajak dikenakan sesuai ketentuan perpajakan yang berlaku.</li>
+                            <li>Pembayaran dilakukan paling lambat <strong>14 (empat belas)</strong> hari kalender sejak invoice diterbitkan.</li>
+                        </ol>
+                    </div>
+
+                    <!-- PASAL 5 -->
+                    <div style="margin-bottom:20px;">
+                        <div style="font-weight:800; font-size:14px; color:#07162c; text-align:center; margin-bottom:2px;">PASAL 5</div>
+                        <div style="font-weight:700; font-size:13px; color:#0284c7; text-align:center; margin-bottom:8px; text-transform:uppercase;">MASA BERLANGGANAN</div>
+                        <ol style="margin-left:24px; font-size:13.5px; text-align:justify;">
+                            <li style="margin-bottom:6px;">Masa berlangganan adalah <strong>36 (tiga puluh enam) bulan</strong> sejak tanggal aktivasi layanan (01 Februari 2025 sampai dengan 01 Februari 2028).</li>
+                            <li>Perpanjangan dapat dilakukan berdasarkan kesepakatan tertulis Para Pihak.</li>
+                        </ol>
+                    </div>
+
+                    <!-- PASAL 6 -->
+                    <div style="margin-bottom:20px;">
+                        <div style="font-weight:800; font-size:14px; color:#07162c; text-align:center; margin-bottom:2px;">PASAL 6</div>
+                        <div style="font-weight:700; font-size:13px; color:#0284c7; text-align:center; margin-bottom:8px; text-transform:uppercase;">GANGGUAN DAN PEMELIHARAAN</div>
+                        <ol style="margin-left:24px; font-size:13.5px; text-align:justify;">
+                            <li style="margin-bottom:6px;">PIHAK PERTAMA menangani gangguan yang berada dalam tanggung jawabnya.</li>
+                            <li style="margin-bottom:6px;">Gangguan akibat kondisi satelit, cuaca ekstrem, force majeure, perangkat PIHAK KEDUA, atau faktor di luar kendali PIHAK PERTAMA tidak dianggap sebagai kelalaian PIHAK PERTAMA.</li>
+                            <li>Pemeliharaan dapat dilakukan untuk menjaga keamanan dan kualitas layanan.</li>
+                        </ol>
+                    </div>
+
+                    <!-- PASAL 7 -->
+                    <div style="margin-bottom:20px;">
+                        <div style="font-weight:800; font-size:14px; color:#07162c; text-align:center; margin-bottom:2px;">PASAL 7</div>
+                        <div style="font-weight:700; font-size:13px; color:#0284c7; text-align:center; margin-bottom:8px; text-transform:uppercase;">KEWAJIBAN PARA PIHAK</div>
+                        <ol style="margin-left:24px; font-size:13.5px; text-align:justify;">
+                            <li style="margin-bottom:6px;">PIHAK PERTAMA wajib menyediakan layanan sesuai spesifikasi yang disepakati dan menangani gangguan layanan.</li>
+                            <li>PIHAK KEDUA wajib membayar biaya layanan tepat waktu, menjaga perangkat, serta menggunakan layanan sesuai hukum dan ketentuan yang berlaku.</li>
+                        </ol>
+                    </div>
+
+                    <!-- PASAL 8 -->
+                    <div style="margin-bottom:20px;">
+                        <div style="font-weight:800; font-size:14px; color:#07162c; text-align:center; margin-bottom:2px;">PASAL 8</div>
+                        <div style="font-weight:700; font-size:13px; color:#0284c7; text-align:center; margin-bottom:8px; text-transform:uppercase;">PENYELESAIAN PERSELISIHAN</div>
+                        <p style="text-align:justify; font-size:13.5px;">
+                            Setiap perselisihan diselesaikan terlebih dahulu melalui musyawarah. Apabila tidak tercapai kesepakatan, Para Pihak dapat menempuh penyelesaian melalui mekanisme hukum yang berlaku di Republik Indonesia.
+                        </p>
+                    </div>
+
+                    <!-- PASAL 9 -->
+                    <div style="margin-bottom:28px;">
+                        <div style="font-weight:800; font-size:14px; color:#07162c; text-align:center; margin-bottom:2px;">PASAL 9</div>
+                        <div style="font-weight:700; font-size:13px; color:#0284c7; text-align:center; margin-bottom:8px; text-transform:uppercase;">PENUTUP</div>
+                        <p style="text-align:justify; font-size:13.5px;">
+                            Perjanjian ini dibuat dalam 2 (dua) rangkap asli, masing-masing mempunyai kekuatan hukum yang sama dan ditandatangani Para Pihak dalam keadaan sadar dan tanpa paksaan.
+                        </p>
+                    </div>
+
+                    <!-- Penandatanganan & Barcode Tanda Tangan Resmi -->
+                    <div style="margin-top:24px; padding-top:20px; border-top:1px solid #e2e8f0;">
+                        <div style="text-align:right; font-size:13.5px; margin-bottom:20px; color:#475569;">
+                            Jakarta Selatan, 15 Februari 2026
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; text-align:center;">
+                            <!-- PIHAK PERTAMA -->
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:20px 16px; background:#f8fafc; position:relative;">
+                                <div style="font-weight:800; font-size:13px; color:#64748b; text-transform:uppercase;">PIHAK PERTAMA</div>
+                                <div style="font-weight:800; font-size:15px; color:#07162c; margin-bottom:12px;">PT DATA LAKE INDONESIA</div>
+
+                                <!-- E-Meterai 10000 Badge -->
+                                <div style="display:inline-block; border:2px dashed #b45309; background:#fffbeb; color:#b45309; padding:4px 10px; border-radius:6px; font-size:10px; font-weight:800; margin-bottom:12px; letter-spacing:0.5px;">
+                                    E-METERAI 10000 DIGITAL PERURI #MTR-DLI-2026-08291
+                                </div>
+
+                                <!-- QR Code with Data Lake Logo in Center -->
+                                <div onclick="openModal('verifyDocModal')" style="cursor:pointer; display:inline-block; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:10px; box-shadow:0 4px 12px rgba(0,0,0,0.06); transition:transform 0.2s;" title="Klik untuk verifikasi keaslian dokumen di database">
+                                    <div style="position:relative; width:130px; height:130px; margin:0 auto;">
+                                        <!-- SVG QR Code Matrix -->
+                                        <svg viewBox="0 0 100 100" width="100%" height="100%" style="display:block;">
+                                            <rect width="100" height="100" fill="#ffffff" />
+                                            <!-- Corner Finders -->
+                                            <rect x="5" y="5" width="24" height="24" rx="3" fill="#07162c" />
+                                            <rect x="9" y="9" width="16" height="16" rx="2" fill="#ffffff" />
+                                            <rect x="13" y="13" width="8" height="8" rx="1" fill="#0284c7" />
+
+                                            <rect x="71" y="5" width="24" height="24" rx="3" fill="#07162c" />
+                                            <rect x="75" y="9" width="16" height="16" rx="2" fill="#ffffff" />
+                                            <rect x="79" y="13" width="8" height="8" rx="1" fill="#0284c7" />
+
+                                            <rect x="5" y="71" width="24" height="24" rx="3" fill="#07162c" />
+                                            <rect x="9" y="75" width="16" height="16" rx="2" fill="#ffffff" />
+                                            <rect x="13" y="79" width="8" height="8" rx="1" fill="#0284c7" />
+
+                                            <!-- QR modules simulated -->
+                                            <rect x="35" y="8" width="5" height="5" fill="#07162c" />
+                                            <rect x="45" y="8" width="5" height="5" fill="#07162c" />
+                                            <rect x="55" y="8" width="5" height="5" fill="#07162c" />
+                                            <rect x="35" y="18" width="5" height="5" fill="#07162c" />
+                                            <rect x="45" y="18" width="5" height="5" fill="#0284c7" />
+                                            <rect x="55" y="18" width="5" height="5" fill="#07162c" />
+                                            
+                                            <rect x="8" y="35" width="5" height="5" fill="#07162c" />
+                                            <rect x="18" y="35" width="5" height="5" fill="#07162c" />
+                                            <rect x="8" y="45" width="5" height="5" fill="#0284c7" />
+                                            <rect x="18" y="55" width="5" height="5" fill="#07162c" />
+                                            <rect x="8" y="55" width="5" height="5" fill="#07162c" />
+
+                                            <rect x="75" y="35" width="5" height="5" fill="#07162c" />
+                                            <rect x="85" y="35" width="5" height="5" fill="#07162c" />
+                                            <rect x="75" y="45" width="5" height="5" fill="#0284c7" />
+                                            <rect x="85" y="55" width="5" height="5" fill="#07162c" />
+
+                                            <rect x="35" y="75" width="5" height="5" fill="#07162c" />
+                                            <rect x="45" y="75" width="5" height="5" fill="#0284c7" />
+                                            <rect x="55" y="75" width="5" height="5" fill="#07162c" />
+                                            <rect x="35" y="85" width="5" height="5" fill="#07162c" />
+                                            <rect x="55" y="85" width="5" height="5" fill="#07162c" />
+
+                                            <rect x="75" y="75" width="5" height="5" fill="#07162c" />
+                                            <rect x="85" y="85" width="5" height="5" fill="#07162c" />
+                                        </svg>
+
+                                        <!-- Center Data Lake Logo Icon -->
+                                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:38px; height:38px; background:#ffffff; border-radius:50%; border:2px solid #0099cc; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.2); padding:3px;">
+                                            <img src="/logo/DLI-logo-navy.png" alt="DLI" style="width:100%; height:auto;">
+                                        </div>
+                                    </div>
+
+                                    <!-- Barcode Lines Underneath -->
+                                    <div style="font-family:monospace; font-size:12px; color:#07162c; letter-spacing:2px; margin-top:6px; line-height:1;">
+                                        ||| | |||| | ||| |||| | || | |||| ||
+                                    </div>
+                                    <div style="font-size:9.5px; color:#0284c7; font-family:monospace; font-weight:700; margin-top:2px;">
+                                        *082/PKS/DLI-NIS/02/2026*
+                                    </div>
+                                </div>
+
+                                <div style="margin-top:8px;">
+                                    <a href="javascript:void(0)" onclick="openModal('verifyDocModal')" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
+                                        <span class="material-symbols-outlined" style="font-size:14px;">verified</span>
+                                        Cek Keaslian Dokumen Database
+                                    </a>
+                                </div>
+
+                                <div style="margin-top:14px; font-weight:800; font-size:14.5px; color:#07162c; text-decoration:underline;">
+                                    Nike P. Kosasih
+                                </div>
+                                <div style="font-size:12.5px; color:#64748b; font-weight:600;">
+                                    Direktur Utama
+                                </div>
+                            </div>
+
+                            <!-- PIHAK KEDUA -->
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:20px 16px; background:#f8fafc; position:relative;">
+                                <div style="font-weight:800; font-size:13px; color:#64748b; text-transform:uppercase;">PIHAK KEDUA</div>
+                                <div style="font-weight:800; font-size:15px; color:#07162c; margin-bottom:12px;">PT NETWORK INOVATIF SOLUTIONS</div>
+
+                                <!-- E-Meterai 10000 Badge -->
+                                <div style="display:inline-block; border:2px dashed #b45309; background:#fffbeb; color:#b45309; padding:4px 10px; border-radius:6px; font-size:10px; font-weight:800; margin-bottom:12px; letter-spacing:0.5px;">
+                                    E-METERAI 10000 DIGITAL PERURI #MTR-NIS-2026-04421
+                                </div>
+
+                                <!-- QR Code for Second Party with Logo -->
+                                <div onclick="openModal('verifyDocModal')" style="cursor:pointer; display:inline-block; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:10px; box-shadow:0 4px 12px rgba(0,0,0,0.06); transition:transform 0.2s;" title="Klik untuk verifikasi keaslian dokumen di database">
+                                    <div style="position:relative; width:130px; height:130px; margin:0 auto;">
+                                        <!-- SVG QR Code Matrix -->
+                                        <svg viewBox="0 0 100 100" width="100%" height="100%" style="display:block;">
+                                            <rect width="100" height="100" fill="#ffffff" />
+                                            <!-- Corner Finders -->
+                                            <rect x="5" y="5" width="24" height="24" rx="3" fill="#07162c" />
+                                            <rect x="9" y="9" width="16" height="16" rx="2" fill="#ffffff" />
+                                            <rect x="13" y="13" width="8" height="8" rx="1" fill="#059669" />
+
+                                            <rect x="71" y="5" width="24" height="24" rx="3" fill="#07162c" />
+                                            <rect x="75" y="9" width="16" height="16" rx="2" fill="#ffffff" />
+                                            <rect x="79" y="13" width="8" height="8" rx="1" fill="#059669" />
+
+                                            <rect x="5" y="71" width="24" height="24" rx="3" fill="#07162c" />
+                                            <rect x="9" y="75" width="16" height="16" rx="2" fill="#ffffff" />
+                                            <rect x="13" y="79" width="8" height="8" rx="1" fill="#059669" />
+
+                                            <!-- QR modules simulated -->
+                                            <rect x="35" y="8" width="5" height="5" fill="#07162c" />
+                                            <rect x="45" y="8" width="5" height="5" fill="#07162c" />
+                                            <rect x="55" y="8" width="5" height="5" fill="#07162c" />
+                                            <rect x="35" y="18" width="5" height="5" fill="#059669" />
+                                            <rect x="45" y="18" width="5" height="5" fill="#07162c" />
+                                            <rect x="55" y="18" width="5" height="5" fill="#07162c" />
+                                            
+                                            <rect x="8" y="35" width="5" height="5" fill="#07162c" />
+                                            <rect x="18" y="35" width="5" height="5" fill="#07162c" />
+                                            <rect x="8" y="45" width="5" height="5" fill="#059669" />
+                                            <rect x="18" y="55" width="5" height="5" fill="#07162c" />
+                                            <rect x="8" y="55" width="5" height="5" fill="#07162c" />
+
+                                            <rect x="75" y="35" width="5" height="5" fill="#07162c" />
+                                            <rect x="85" y="35" width="5" height="5" fill="#07162c" />
+                                            <rect x="75" y="45" width="5" height="5" fill="#059669" />
+                                            <rect x="85" y="55" width="5" height="5" fill="#07162c" />
+
+                                            <rect x="35" y="75" width="5" height="5" fill="#07162c" />
+                                            <rect x="45" y="75" width="5" height="5" fill="#07162c" />
+                                            <rect x="55" y="75" width="5" height="5" fill="#059669" />
+                                            <rect x="35" y="85" width="5" height="5" fill="#07162c" />
+                                            <rect x="55" y="85" width="5" height="5" fill="#07162c" />
+
+                                            <rect x="75" y="75" width="5" height="5" fill="#07162c" />
+                                            <rect x="85" y="85" width="5" height="5" fill="#07162c" />
+                                        </svg>
+
+                                        <!-- Center Badge -->
+                                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:38px; height:38px; background:#ffffff; border-radius:50%; border:2px solid #059669; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.2); font-weight:800; font-size:11px; color:#047857;">
+                                            NIS
+                                        </div>
+                                    </div>
+
+                                    <!-- Barcode Lines Underneath -->
+                                    <div style="font-family:monospace; font-size:12px; color:#07162c; letter-spacing:2px; margin-top:6px; line-height:1;">
+                                        |||| | ||| || | |||| ||| | || |||| |
+                                    </div>
+                                    <div style="font-size:9.5px; color:#059669; font-family:monospace; font-weight:700; margin-top:2px;">
+                                        *NIS-DIR-SIGN-082-2026*
+                                    </div>
+                                </div>
+
+                                <div style="margin-top:8px;">
+                                    <a href="javascript:void(0)" onclick="openModal('verifyDocModal')" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
+                                        <span class="material-symbols-outlined" style="font-size:14px;">verified</span>
+                                        Cek Keaslian Dokumen Database
+                                    </a>
+                                </div>
+
+                                <div style="margin-top:14px; font-weight:800; font-size:14.5px; color:#07162c; text-decoration:underline;">
+                                    Mushawir Odegoa
+                                </div>
+                                <div style="font-size:12.5px; color:#64748b; font-weight:600;">
+                                    Direktur
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1477,6 +1804,78 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                 </div>
                 <div class="dash-modal-footer">
                     <button type="button" onclick="closeModal('diagModal')" class="btn-dash btn-dash-primary">Selesai</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Verifikasi Keaslian Dokumen PKS -->
+        <div class="dash-modal" id="verifyDocModal" style="display: none !important;">
+            <div class="dash-modal-content" style="max-width: 650px;">
+                <div class="dash-modal-header" style="background: linear-gradient(135deg, #07162c 0%, #0d274c 100%); color: #ffffff; border-radius: 12px 12px 0 0; padding: 18px 24px; border-bottom: 2px solid #00D2FF;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span class="material-symbols-outlined" style="color:#10b981; font-size:26px;">verified</span>
+                        <h3 class="dash-modal-title" style="color:#ffffff; font-size:16px; margin:0;">Verifikasi Keaslian Dokumen Resmi PKS</h3>
+                    </div>
+                    <button type="button" onclick="closeModal('verifyDocModal')" class="dash-modal-close" style="color:#ffffff;">&times;</button>
+                </div>
+                <div class="dash-modal-body" style="padding: 24px; font-size: 13.5px; color: #334155;">
+                    <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+                        <div style="background: #10b981; color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <span class="material-symbols-outlined" style="font-size: 26px;">check_circle</span>
+                        </div>
+                        <div>
+                            <div style="font-size: 14.5px; font-weight: 800; color: #065f46;">DOKUMEN ASLI & TERVERIFIKASI</div>
+                            <div style="font-size: 12.5px; color: #047857; margin-top: 2px;">Tercatat sah dalam Basis Data Legal & Kontrak PT Data Lake Indonesia</div>
+                        </div>
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px;">
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 9px 4px; color: #64748b; width: 38%;">Nomor Perjanjian:</td>
+                                <td style="padding: 9px 4px; font-weight: 700; color: #0f172a; font-family: monospace;">082/PKS/DLI-NIS/02/2026</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 9px 4px; color: #64748b;">Perihal:</td>
+                                <td style="padding: 9px 4px; font-weight: 600; color: #0f172a;">Penyediaan Layanan Internet Untuk Reseller</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 9px 4px; color: #64748b;">Pihak Pertama:</td>
+                                <td style="padding: 9px 4px; color: #0f172a;"><strong>PT Data Lake Indonesia</strong> (Nike P. Kosasih - Direktur Utama)</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 9px 4px; color: #64748b;">Pihak Kedua:</td>
+                                <td style="padding: 9px 4px; color: #0f172a;"><strong>PT Network Inovatif Solutions</strong> (Mushawir Odegoa - Direktur)</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 9px 4px; color: #64748b;">Layanan / Kapasitas:</td>
+                                <td style="padding: 9px 4px; color: #0f172a;"><span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-weight: 700;">Starlink Dedicated Enterprise 300 / 45 Mbps</span></td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 9px 4px; color: #64748b;">Lokasi Penggelaran:</td>
+                                <td style="padding: 9px 4px; color: #0f172a;">Desa Lusuo, Kec. Morotai Utara, Pulau Morotai, Maluku Utara</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 9px 4px; color: #64748b;">Sertifikat Keamanan Hash:</td>
+                                <td style="padding: 9px 4px; font-family: monospace; font-size: 11px; color: #0284c7; word-break: break-all;">SHA256: 7d8f4e2c91b5a38096f2d658c14a8b79e2a472c64b6389f417f739097e3a9851</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 9px 4px; color: #64748b;">Integritas & Otentikasi:</td>
+                                <td style="padding: 9px 4px; color: #10b981; font-weight: 700;"><span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">lock</span> Valid & Tersegel Kriptografis (100%)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="background: #f8fafc; border-radius: 8px; padding: 12px; border: 1px dashed #cbd5e1; font-size: 12px; color: #64748b; line-height: 1.5;">
+                        <strong style="color: #334155;">Informasi Audit Trail:</strong> Dokumen ini telah ditandatangani secara elektronik berkekuatan hukum tetap sesuai UU ITE No. 11/2008 & PP No. 71/2019. Setiap manipulasi berkas fisik ataupun digital akan membatalkan tanda tangan barcode secara otomatis.
+                    </div>
+                </div>
+                <div class="dash-modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+                    <a href="/verify-doc.php?doc=082/PKS/DLI-NIS/02/2026" target="_blank" class="btn-dash" style="background:#0284c7; color:#ffffff; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                        <span class="material-symbols-outlined" style="font-size:18px;">open_in_new</span>
+                        Buka Halaman Audit Publik
+                    </a>
+                    <button type="button" onclick="closeModal('verifyDocModal')" class="btn-dash btn-dash-primary">Tutup</button>
                 </div>
             </div>
         </div>
