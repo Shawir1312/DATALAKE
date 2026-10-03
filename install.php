@@ -158,6 +158,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install']) && !$i
                         key TEXT PRIMARY KEY,
                         val TEXT
                     );
+
+                    CREATE TABLE IF NOT EXISTS starlink_kits (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        user_id INTEGER NOT NULL,
+                        kit_number TEXT NOT NULL,
+                        model TEXT DEFAULT 'Starlink Standard Gen 3 V4',
+                        plan_name TEXT DEFAULT 'Dedicated Business PKS Enterprise',
+                        location TEXT DEFAULT 'Terminal Operasional',
+                        status TEXT DEFAULT 'online',
+                        ip_address TEXT DEFAULT '100.64.12.81',
+                        sla_percent REAL DEFAULT 99.98,
+                        download_speed INTEGER DEFAULT 285,
+                        upload_speed INTEGER DEFAULT 45,
+                        ping_ms INTEGER DEFAULT 24,
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    );
                 ");
             } else {
                 // MySQL
@@ -211,6 +227,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install']) && !$i
                     CREATE TABLE IF NOT EXISTS site_settings (
                         `key` VARCHAR(50) PRIMARY KEY,
                         `val` TEXT
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+                    CREATE TABLE IF NOT EXISTS starlink_kits (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        user_id INT NOT NULL,
+                        kit_number VARCHAR(30) NOT NULL,
+                        model VARCHAR(100) DEFAULT 'Starlink Standard Gen 3 V4',
+                        plan_name VARCHAR(100) DEFAULT 'Dedicated Business PKS Enterprise',
+                        location VARCHAR(150) DEFAULT 'Terminal Operasional',
+                        status VARCHAR(20) DEFAULT 'online',
+                        ip_address VARCHAR(50) DEFAULT '100.64.12.81',
+                        sla_percent DECIMAL(5,2) DEFAULT 99.98,
+                        download_speed INT DEFAULT 285,
+                        upload_speed INT DEFAULT 45,
+                        ping_ms INT DEFAULT 24,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 ");
             }

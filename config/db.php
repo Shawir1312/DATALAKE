@@ -116,6 +116,22 @@ function init_db_tables(PDO $pdo) {
                 key TEXT PRIMARY KEY,
                 val TEXT
             );
+
+            CREATE TABLE IF NOT EXISTS starlink_kits (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                kit_number TEXT NOT NULL,
+                model TEXT DEFAULT 'Starlink Standard Gen 3 V4',
+                plan_name TEXT DEFAULT 'Dedicated Business PKS Enterprise',
+                location TEXT DEFAULT 'Terminal Operasional',
+                status TEXT DEFAULT 'online',
+                ip_address TEXT DEFAULT '100.64.12.81',
+                sla_percent REAL DEFAULT 99.98,
+                download_speed INTEGER DEFAULT 285,
+                upload_speed INTEGER DEFAULT 45,
+                ping_ms INTEGER DEFAULT 24,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
         ");
     } else {
         // MySQL
@@ -157,6 +173,22 @@ function init_db_tables(PDO $pdo) {
             CREATE TABLE IF NOT EXISTS site_settings (
                 `key` VARCHAR(50) PRIMARY KEY,
                 `val` TEXT
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            CREATE TABLE IF NOT EXISTS starlink_kits (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                kit_number VARCHAR(30) NOT NULL,
+                model VARCHAR(100) DEFAULT 'Starlink Standard Gen 3 V4',
+                plan_name VARCHAR(100) DEFAULT 'Dedicated Business PKS Enterprise',
+                location VARCHAR(150) DEFAULT 'Terminal Operasional',
+                status VARCHAR(20) DEFAULT 'online',
+                ip_address VARCHAR(50) DEFAULT '100.64.12.81',
+                sla_percent DECIMAL(5,2) DEFAULT 99.98,
+                download_speed INT DEFAULT 285,
+                upload_speed INT DEFAULT 45,
+                ping_ms INT DEFAULT 24,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ");
     }
@@ -263,3 +295,108 @@ function get_wa_url($message = '') {
     }
     return "https://api.whatsapp.com/send?phone=" . $phone . ($message !== '' ? "&text=" . urlencode($message) : '');
 }
+
+/**
+ * Generate random Starlink Kit Number: KIT******** (KIT followed by 8 characters)
+ */
+function generate_starlink_kit_number() {
+    $chars = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+    $code = 'KIT';
+    for ($i = 0; $i < 8; $i++) {
+        $code .= $chars[random_int(0, strlen($chars) - 1)];
+    }
+    return $code;
+}
+
+/**
+ * Get or initialize 3 Starlink Gen 3 V4 kits for a Dedicated PKS user
+ */
+function get_user_starlink_kits($user_id) {
+    $pdo = get_db_connection();
+    $stmt = $pdo->prepare("SELECT * FROM starlink_kits WHERE user_id = ? ORDER BY id ASC");
+    $stmt->execute([$user_id]);
+    $kits = $stmt->fetchAll();
+
+    if (empty($kits)) {
+        $locations = [
+            'Terminal A — Kantor Pusat / Jakarta HQ',
+            'Terminal B — Site Operasional Balikpapan',
+            'Terminal C — Remote Site / Fasilitas Sorong'
+        ];
+        $telemetries = [
+            ['down' => 294, 'up' => 48, 'ping' => 22, 'ip' => '100.64.18.24', 'sla' => 99.98],
+            ['down' => 282, 'up' => 44, 'ping' => 26, 'ip' => '100.64.18.25', 'sla' => 99.95],
+            ['down' => 312, 'up' => 54, 'ping' => 20, 'ip' => '100.64.18.26', 'sla' => 99.99],
+        ];
+
+        for ($i = 0; $i < 3; $i++) {
+            $kit_no = generate_starlink_kit_number();
+            $ins = $pdo->prepare("
+                INSERT INTO starlink_kits (user_id, kit_number, model, plan_name, location, status, ip_address, sla_percent, download_speed, upload_speed, ping_ms)
+                VALUES (?, ?, 'Starlink Standard Gen 3 (V4)', 'Dedicated Business PKS Enterprise', ?, 'online', ?, ?, ?, ?, ?)
+            ");
+            $ins->execute([
+                $user_id,
+                $kit_no,
+                $locations[$i],
+                $telemetries[$i]['ip'],
+                $telemetries[$i]['sla'],
+                $telemetries[$i]['down'],
+                $telemetries[$i]['up'],
+                $telemetries[$i]['ping'],
+            ]);
+        }
+
+        $stmt = $pdo->prepare("SELECT * FROM starlink_kits WHERE user_id = ? ORDER BY id ASC");
+        $stmt->execute([$user_id]);
+        $kits = $stmt->fetchAll();
+    }
+
+    return $kits;
+}
+
+/**
+ * Dedicated PKS Subscription Billing History (12 Jt/month, Feb 2025 to Present, All Lunas)
+ */
+function get_pks_billing_history() {
+    $months = [
+        ['period' => 'Oktober 2026', 'code' => '2026-10', 'paid_date' => '05 Okt 2026', 'inv' => 'INV/DLI/202610/0842'],
+        ['period' => 'September 2026', 'code' => '2026-09', 'paid_date' => '05 Sep 2026', 'inv' => 'INV/DLI/202609/0831'],
+        ['period' => 'Agustus 2026', 'code' => '2026-08', 'paid_date' => '05 Agu 2026', 'inv' => 'INV/DLI/202608/0820'],
+        ['period' => 'Juli 2026', 'code' => '2026-07', 'paid_date' => '05 Jul 2026', 'inv' => 'INV/DLI/202607/0809'],
+        ['period' => 'Juni 2026', 'code' => '2026-06', 'paid_date' => '05 Jun 2026', 'inv' => 'INV/DLI/202606/0798'],
+        ['period' => 'Mei 2026', 'code' => '2026-05', 'paid_date' => '05 Mei 2026', 'inv' => 'INV/DLI/202605/0787'],
+        ['period' => 'April 2026', 'code' => '2026-04', 'paid_date' => '05 Apr 2026', 'inv' => 'INV/DLI/202604/0776'],
+        ['period' => 'Maret 2026', 'code' => '2026-03', 'paid_date' => '05 Mar 2026', 'inv' => 'INV/DLI/202603/0765'],
+        ['period' => 'Februari 2026', 'code' => '2026-02', 'paid_date' => '05 Feb 2026', 'inv' => 'INV/DLI/202602/0754'],
+        ['period' => 'Januari 2026', 'code' => '2026-01', 'paid_date' => '05 Jan 2026', 'inv' => 'INV/DLI/202601/0743'],
+        ['period' => 'Desember 2025', 'code' => '2025-12', 'paid_date' => '05 Des 2025', 'inv' => 'INV/DLI/202512/0732'],
+        ['period' => 'November 2025', 'code' => '2025-11', 'paid_date' => '05 Nov 2025', 'inv' => 'INV/DLI/202511/0721'],
+        ['period' => 'Oktober 2025', 'code' => '2025-10', 'paid_date' => '05 Okt 2025', 'inv' => 'INV/DLI/202510/0710'],
+        ['period' => 'September 2025', 'code' => '2025-09', 'paid_date' => '05 Sep 2025', 'inv' => 'INV/DLI/202509/0699'],
+        ['period' => 'Agustus 2025', 'code' => '2025-08', 'paid_date' => '05 Agu 2025', 'inv' => 'INV/DLI/202508/0688'],
+        ['period' => 'Juli 2025', 'code' => '2025-07', 'paid_date' => '05 Jul 2025', 'inv' => 'INV/DLI/202507/0677'],
+        ['period' => 'Juni 2025', 'code' => '2025-06', 'paid_date' => '05 Jun 2025', 'inv' => 'INV/DLI/202506/0666'],
+        ['period' => 'Mei 2025', 'code' => '2025-05', 'paid_date' => '05 Mei 2025', 'inv' => 'INV/DLI/202505/0655'],
+        ['period' => 'April 2025', 'code' => '2025-04', 'paid_date' => '05 Apr 2025', 'inv' => 'INV/DLI/202504/0644'],
+        ['period' => 'Maret 2025', 'code' => '2025-03', 'paid_date' => '05 Mar 2025', 'inv' => 'INV/DLI/202503/0633'],
+        ['period' => 'Februari 2025', 'code' => '2025-02', 'paid_date' => '05 Feb 2025', 'inv' => 'INV/DLI/202502/0622'],
+    ];
+
+    $result = [];
+    foreach ($months as $m) {
+        $result[] = [
+            'invoice_no' => $m['inv'],
+            'period' => $m['period'],
+            'description' => 'Dedicated Bandwidth Priority PKS (3x Starlink Gen 3 V4)',
+            'amount' => 12000000,
+            'amount_formatted' => 'Rp 12.000.000',
+            'status' => 'LUNAS',
+            'paid_date' => $m['paid_date'],
+            'payment_method' => 'Bank Mandiri Corporate Auto-Debit',
+            'pks_number' => 'PKS-DLI/STARLINK-DEDICATED/2025-0082'
+        ];
+    }
+    return $result;
+}
+

@@ -47,6 +47,24 @@ CREATE TABLE IF NOT EXISTS `site_settings` (
   `val` TEXT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Starlink Kits Table (Dedicated PKS)
+CREATE TABLE IF NOT EXISTS `starlink_kits` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `kit_number` VARCHAR(30) NOT NULL,
+  `model` VARCHAR(100) DEFAULT 'Starlink Standard Gen 3 V4',
+  `plan_name` VARCHAR(100) DEFAULT 'Dedicated Business PKS Enterprise',
+  `location` VARCHAR(150) DEFAULT 'Terminal Operasional',
+  `status` VARCHAR(20) DEFAULT 'online',
+  `ip_address` VARCHAR(50) DEFAULT '100.64.12.81',
+  `sla_percent` DECIMAL(5,2) DEFAULT 99.98,
+  `download_speed` INT DEFAULT 285,
+  `upload_speed` INT DEFAULT 45,
+  `ping_ms` INT DEFAULT 24,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 -- Default Admin Account (Password: admin123)
 INSERT INTO `users` (`name`, `username`, `email`, `phone`, `password`, `role`, `status`) 
 VALUES ('Administrator Data Lake', 'admin', 'admin@datalake.id', '08170117800', '$2y$10$wEkgz/e8WpL4gR6pmsLrqeSZZz5J7hY4k7Wb0pM6v3Rj7s8XqX4e.', 'admin', 'active')

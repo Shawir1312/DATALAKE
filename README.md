@@ -20,20 +20,35 @@ Dilengkapi dengan wizard instalasi otomatis web (**`install.php`**) untuk kemuda
 - **Floating WhatsApp FAB**: Tombol konsultasi WhatsApp dinamis langsung ke kontak admin yang ditentukan.
 - **Formulir Konsultasi Interaktif**: Pengunjung dapat mengajukan permintaan paket dan tersimpan otomatis ke database.
 
-### 2. Sistem Autentikasi & Keamanan (Full PHP)
-- **Registrasi Akun (`register.php`)**: Validasi nama, username, email, nomor HP/WA, dan konfirmasi kata sandi.
-- **Login Akun (`login.php`)**: Mendukung login dengan username maupun email, proteksi brute-force, dan 1-click autofill untuk akun demo.
+### 3. Sistem Registrasi OTP & Autentikasi Keamanan
+- **Registrasi Akun dengan OTP 2-Langkah (`register.php`)**: Validasi pendaftaran nomor WhatsApp/HP menggunakan kode OTP 6-digit dengan simulasi WhatsApp Gateway interaktif.
+- **Auto-Provisioning Pelanggan Dedicated PKS**: Pengguna baru otomatis terdaftar sebagai pelanggan kontrak PKS Starlink Dedicated Enterprise dan langsung memiliki akses monitoring live.
+- **Login Akun (`login.php`)**: Mendukung login dengan username maupun email, proteksi brute-force.
 - **Enkripsi Standar Industri**: Menggunakan algoritma `PASSWORD_BCRYPT`.
 - **Proteksi CSRF**: Token keamanan unik untuk setiap request formulir.
 - **Session & Audit Log**: Pencatatan aktivitas pengguna dan riwayat login ke dalam tabel `activity_logs`.
 
-### 3. Dashboard Administrator (`dashboard.php`)
+### 4. Portal Monitoring Dedicated PKS Enterprise (`dashboard.php`)
+- **3 Unit Starlink Kit Gen 3 V4 Aktif**: Auto-generate nomor KIT acak dengan format standar `KIT********` (contoh: `KIT4GKRZ8Y2`) dengan status aktif dan terkunci (Read-Only NOC) sehingga pengguna tidak dapat mengubah konfigurasi fisik atau nomor kit.
+- **Static & Dynamic Telemetry Monitoring**:
+  - Download Speed (s/d 350 Mbps) & Upload Speed (s/d 42 Mbps)
+  - Latency / Ping real-time (24ms - 32ms) & Jitter test
+  - SLA Uptime Guarantee 99.98% dengan visual matriks 30 hari
+  - Grafik visual gelombang 24-jam & Speedtest meter interaktif
+- **Riwayat Tagihan & Pembayaran (Billing History)**:
+  - Biaya langganan bulanan Dedicated PKS **Rp 12.000.000 / bulan**.
+  - Riwayat penagihan otomatis dari **Februari 2025 sampai sekarang (Oktober 2026)** = 21 invoice.
+  - Seluruh status tagihan berstatus **LUNAS (Paid in Full)**.
+  - Modal cetak **Kwitansi Digital Resmi PT Data Lake Indonesia** lengkap dengan nomor invoice, rincian PPN 11%, stempel digital, dan tanda tangan bagian keuangan.
+- **Detail Kontrak PKS**: Informasi nomor PKS, durasi kontrak, komitmen bandwidth 1:1, dan tombol darurat NOC 24/7.
+
+### 5. Dashboard Administrator
 - **Ringkasan Eksekutif (Overview)**: Kartu metrik total user, status permohonan layanan, indikator koneksi database aktif, dan log sistem.
 - **Manajemen Pengguna (User Management)**: Fitur CRUD lengkap (tambah pengguna baru, aktifkan/nonaktifkan akun, hapus pengguna, manajemen hak akses admin/user).
 - **Manajemen Leads & Konsultasi**: Memantau seluruh permohonan paket Starlink yang masuk, filter status (*Baru / Dihubungi / Selesai*), dan tombol langsung untuk chat via WhatsApp ke calon pelanggan.
 - **Pengaturan Profil & Keamanan**: Pembaruan data diri dan penggantian kata sandi dengan verifikasi password lama.
 
-### 4. Web Installer Server (`install.php`)
+### 6. Web Installer Server (`install.php`)
 - **Pemeriksaan Kompatibilitas**: Cek otomatis versi PHP, ekstensi PDO, driver DB, dan izin tulis folder.
 - **Pilihan Mesin Database**:
   - **SQLite (1-Klik Siap Pakai)**: Langsung jalan tanpa perlu konfigurasi MySQL atau database hosting.

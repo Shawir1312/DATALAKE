@@ -484,34 +484,40 @@ body.dashboard-body {
 }
 
 /* Modals */
-.dash-modal-backdrop {
+.dash-modal {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(4, 11, 26, 0.7);
-  backdrop-filter: blur(4px);
-  z-index: 2000;
+  background: rgba(4, 11, 26, 0.75);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 2500;
   align-items: center;
   justify-content: center;
   padding: 16px;
+  overflow-y: auto;
 }
 
-.dash-modal-backdrop.show {
-  display: flex;
+.dash-modal.show {
+  display: flex !important;
 }
 
-.dash-modal {
+.dash-modal-content {
   background: #ffffff;
   border-radius: 16px;
   width: 100%;
-  max-width: 520px;
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.25);
+  max-width: 540px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.35);
   overflow: hidden;
-  animation: modalEnter 0.25s ease-out;
+  animation: modalEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes modalEnter {
-  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  from { opacity: 0; transform: scale(0.95) translateY(12px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
@@ -530,11 +536,29 @@ body.dashboard-body {
   margin: 0;
 }
 
+.dash-modal-close {
+  background: transparent;
+  border: none;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.dash-modal-close:hover {
+  background: #f1f5f9;
+  color: var(--text-dark);
+}
+
 .dash-modal-body {
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow-y: auto;
 }
 
 .dash-modal-footer {
@@ -596,3 +620,226 @@ body.dashboard-body {
   padding: 6px;
   color: var(--primary-dli);
 }
+
+/* Dedicated PKS Client Styles */
+.pks-hero-banner {
+  background: linear-gradient(135deg, #040b1a 0%, #0a2540 100%);
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  box-shadow: 0 10px 30px rgba(4, 11, 26, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.pks-hero-banner::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(0, 210, 255, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.pks-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 210, 255, 0.15);
+  border: 1px solid #00D2FF;
+  color: #00D2FF;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.pks-terminal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.pks-terminal-card {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.pks-terminal-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 210, 255, 0.15);
+  border-color: #00D2FF;
+}
+
+.pks-terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.pks-terminal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pks-kit-box {
+  background: #040b1a;
+  color: #00D2FF;
+  font-family: monospace;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 8px;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  border: 1px solid rgba(0, 210, 255, 0.3);
+}
+
+.pks-kit-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-family: inherit;
+  font-weight: normal;
+}
+
+.pks-telemetry-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.pks-telemetry-item .val {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.pks-telemetry-item .lbl {
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+/* Speed Test Simulator */
+.speedtest-box {
+  background: linear-gradient(135deg, #040b1a 0%, #071a33 100%);
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 24px;
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.speedtest-gauge {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 8px solid rgba(0, 210, 255, 0.15);
+  border-top-color: #00D2FF;
+  border-right-color: #00D2FF;
+  margin: 0 auto 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.speedtest-gauge.testing {
+  animation: spinGauge 1.5s linear infinite;
+}
+
+@keyframes spinGauge {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Kwitansi / Invoice Modal Styles */
+.invoice-paper {
+  background: #ffffff;
+  color: #0f172a;
+  padding: 36px;
+  border-radius: 12px;
+  max-width: 680px;
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.invoice-seal {
+  display: inline-block;
+  border: 3px double #10b981;
+  color: #10b981;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 8px;
+  letter-spacing: 2px;
+  font-size: 14px;
+  transform: rotate(-4deg);
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .invoice-paper, .invoice-paper * {
+    visibility: visible;
+  }
+  .invoice-paper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    box-shadow: none;
+    padding: 0;
+  }
+}
+
