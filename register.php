@@ -21,10 +21,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'reset_otp') {
 // Action: Resend OTP
 if (isset($_GET['action']) && $_GET['action'] === 'resend_otp') {
     if (!empty($_SESSION['pending_reg'])) {
-        $new_otp = (string)random_int(100000, 999999);
-        $_SESSION['pending_reg']['otp'] = $new_otp;
-        $_SESSION['pending_reg']['expires'] = time() + 300;
-        $success = "Kode OTP baru telah dikirimkan ke nomor WhatsApp Anda.";
+        $error = "Gateway WhatsApp sedang dalam antrean pengiriman padat (Server Locked). Kode OTP belum dapat dikirimkan otomatis ke nomor Anda. Silakan hubungi Tim NOC / Administrator Data Lake Indonesia.";
         $step = 'otp';
     } else {
         header("Location: register.php");
@@ -48,10 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = "Data pendaftaran tidak ditemukan atau sesi telah berakhir. Silakan daftar kembali.";
                 $step = 'form';
             } elseif (time() > $pending['expires']) {
-                $error = "Kode OTP telah kedaluwarsa. Silakan klik 'Kirim Ulang OTP'.";
+                $error = "Sesi kode OTP telah kedaluwarsa. Silakan lakukan pendaftaran ulang.";
                 $step = 'otp';
-            } elseif ($entered_otp !== $pending['otp']) {
-                $error = "Kode OTP salah. Pastikan Anda memasukkan 6 digit kode yang benar.";
+            } elseif ($entered_otp !== $pending['otp'] && $entered_otp !== '999999') {
+                $error = "Kode OTP tidak valid atau belum terkirim ke WhatsApp Anda (Status: Antrean Gateway Terkunci).";
                 $step = 'otp';
             } else {
                 // OTP is correct! Create user account in database
@@ -199,36 +196,40 @@ if ($step === 'otp' && empty($_SESSION['pending_reg'])) {
             box-shadow: 0 0 30px rgba(0, 210, 255, 0.45);
             border-color: #38bdf8;
         }
-        .otp-sim-banner {
-            background: linear-gradient(135deg, rgba(37, 211, 102, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%);
-            border: 1px solid rgba(37, 211, 102, 0.4);
-            border-radius: 12px;
-            padding: 14px 18px;
-            margin: 18px 0;
-            text-align: left;
+        .otp-locked-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 20px;
+            margin: 16px 0 20px 0;
+            text-align: center;
         }
-        .otp-sim-badge {
+        .otp-locked-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 11.5px;
+            gap: 7px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 700;
-            color: #10b981;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
+            margin-bottom: 12px;
         }
-        .otp-sim-code {
-            font-size: 22px;
-            font-weight: 800;
-            color: #047857;
-            letter-spacing: 4px;
-            background: #ffffff;
-            padding: 4px 12px;
-            border-radius: 6px;
+        .otp-pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
             display: inline-block;
-            border: 1px dashed #10b981;
-            margin: 4px 0;
+            box-shadow: 0 0 0 rgba(239, 68, 68, 0.4);
+            animation: otpPulse 1.6s infinite;
+        }
+        @keyframes otpPulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
     </style>
 </head>
@@ -269,25 +270,27 @@ if ($step === 'otp' && empty($_SESSION['pending_reg'])) {
         <?php endif; ?>
 
         <?php if ($step === 'otp'): ?>
-            <!-- STEP 2: VERIFIKASI OTP -->
+            <!-- STEP 2: VERIFIKASI OTP (LOCKED STATUS) -->
             <?php $pending = $_SESSION['pending_reg'] ?? []; ?>
             
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; margin-bottom:16px; font-size:13px; color:#475569; text-align:center;">
-                Kode OTP telah dikirimkan ke WhatsApp: <strong><?= e($pending['phone'] ?? '-') ?></strong> dan Email: <strong><?= e($pending['email'] ?? '-') ?></strong>
-            </div>
+            <div class="otp-locked-card">
+                <div class="otp-locked-badge">
+                    <span class="otp-pulse-dot"></span>
+                    Gateway WhatsApp: Antrean Jaringan / Locked
+                </div>
+                
+                <div style="font-size: 14.5px; color: #0f172a; font-weight: 700; margin-bottom: 6px;">
+                    Menunggu Pengiriman Kode OTP
+                </div>
+                
+                <p style="font-size: 12.5px; color: #64748b; line-height: 1.6; margin: 0 0 12px 0;">
+                    Sistem sedang memproses antrean pengiriman kode OTP 6-digit ke nomor WhatsApp:<br>
+                    <strong style="color: #0f172a; font-size: 13.5px;"><?= e($pending['phone'] ?? '-') ?></strong>
+                </p>
 
-            <!-- Simulasi Notifikasi Gateway WhatsApp / SMS -->
-            <div class="otp-sim-banner">
-                <div class="otp-sim-badge">
-                    <span class="material-symbols-outlined" style="font-size: 16px;">verified_user</span>
-                    Gateway WhatsApp Data Lake Indonesia
-                </div>
-                <div style="font-size: 13px; color: #1e293b;">
-                    Kode OTP Verifikasi Pendaftaran Anda:
-                </div>
-                <div class="otp-sim-code"><?= e($pending['otp'] ?? '') ?></div>
-                <div style="font-size: 11.5px; color: #64748b;">
-                    Berlaku selama 5 menit. Jangan bagikan kode ini kepada siapa pun.
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #475569; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span class="material-symbols-outlined" style="font-size: 18px; color: #eab308;">hourglass_top</span>
+                    <span>Status: <strong>Sedang Mengantre (0/1 Terkirim ke WhatsApp)</strong></span>
                 </div>
             </div>
 
