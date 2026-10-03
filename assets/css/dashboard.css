@@ -601,7 +601,7 @@ body.dashboard-body {
 }
 
 /* Mobile responsive */
-@media (max-width: 991px) {
+@media screen and (max-width: 991px) {
   .dash-sidebar {
     transform: translateX(-100%);
   }
@@ -876,8 +876,8 @@ body.dashboard-body {
   gap: 12px;
 }
 
-/* Comprehensive Mobile Styles */
-@media (max-width: 768px) {
+/* Comprehensive Mobile Screen Styles (Screen Only, Never for Print) */
+@media screen and (max-width: 768px) {
   .dash-content {
     padding: 16px 12px !important;
   }
@@ -1006,6 +1006,7 @@ body.dashboard-body {
   }
 }
 
+/* Formal Corporate Print Layout - Always Desktop/Original Format */
 @media print {
   @page {
     margin: 0;
@@ -1033,7 +1034,80 @@ body.dashboard-body {
     visibility: visible !important;
   }
 
-  .invoice-paper, .pks-document-paper {
+  /* Always keep the formal original desktop paper layout for PKS printing */
+  .pks-document-paper {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 44px 50px !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 13.5px !important;
+    line-height: 1.8 !important;
+  }
+
+  /* Original formal Kop Surat: logo on left, contact on right */
+  .pks-kop-surat {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding-bottom: 18px !important;
+    border-bottom: 3px double #0f172a !important;
+    margin-bottom: 28px !important;
+    gap: 16px !important;
+  }
+
+  .pks-kop-surat > div:first-child {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+
+  .pks-kop-contact {
+    text-align: right !important;
+    border-top: none !important;
+    padding-top: 0 !important;
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Original formal 2-column signature layout side-by-side */
+  .pks-signature-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    text-align: center !important;
+  }
+
+  /* Original formal document footer row */
+  .pks-doc-footer {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 30px !important;
+    padding-top: 14px !important;
+    border-top: 1px dashed #cbd5e1 !important;
+  }
+
+  .pks-doc-footer > div:first-child {
+    text-align: left !important;
+    width: auto !important;
+  }
+
+  .pks-doc-footer > div:last-child {
+    text-align: right !important;
+    width: auto !important;
+  }
+
+  .invoice-paper {
     position: absolute !important;
     left: 0 !important;
     top: 0 !important;
