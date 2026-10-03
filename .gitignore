@@ -6,5 +6,9 @@ Thumbs.db
 # Sensitive runtime configurations
 config/installed.lock
 
+# Production database - NEVER overwrite via git
+# Each server maintains its own live database
+database/datalake.sqlite
+
 # Temporary scratch files
 scratch/
