@@ -833,6 +833,179 @@ body.dashboard-body {
   transform: rotate(-4deg);
 }
 
+/* PKS Document Paper & Components */
+.pks-document-paper {
+  background: #ffffff;
+  color: #0f172a;
+  max-width: 860px;
+  margin: 0 auto 30px;
+  padding: 44px 50px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.8;
+  position: relative;
+}
+
+.pks-kop-surat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 18px;
+  border-bottom: 3px double #0f172a;
+  margin-bottom: 28px;
+  gap: 16px;
+}
+
+.pks-signature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  text-align: center;
+}
+
+.pks-doc-footer {
+  margin-top: 30px;
+  padding-top: 14px;
+  border-top: 1px dashed #cbd5e1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Comprehensive Mobile Styles */
+@media (max-width: 768px) {
+  .dash-content {
+    padding: 16px 12px !important;
+  }
+
+  .dash-topbar {
+    padding: 12px 14px !important;
+  }
+
+  .pks-hero-banner {
+    padding: 18px 16px !important;
+    gap: 14px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .pks-hero-banner > div {
+    width: 100% !important;
+    text-align: left !important;
+  }
+
+  .pks-terminal-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .pks-document-paper {
+    padding: 22px 14px !important;
+    border-radius: 10px !important;
+    font-size: 13px !important;
+    line-height: 1.65 !important;
+    margin-bottom: 20px !important;
+  }
+
+  .pks-kop-surat {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    gap: 14px !important;
+    padding-bottom: 14px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .pks-kop-surat > div:first-child {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .pks-kop-contact {
+    text-align: left !important;
+    width: 100% !important;
+    border-top: 1px dashed #e2e8f0;
+    padding-top: 10px;
+    font-size: 11.5px !important;
+  }
+
+  .pks-signature-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .pks-doc-footer {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    text-align: center !important;
+    gap: 12px !important;
+  }
+
+  .pks-doc-footer > div {
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .pks-doc-footer a {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .pks-top-actions {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+
+  .pks-top-actions button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .stat-card {
+    padding: 16px !important;
+  }
+
+  .dash-table-card {
+    overflow-x: auto !important;
+  }
+
+  .invoice-paper {
+    padding: 20px 14px !important;
+  }
+
+  .invoice-header, .invoice-parties {
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  .invoice-parties > div {
+    width: 100% !important;
+    text-align: left !important;
+  }
+
+  .term-test-card {
+    width: 100% !important;
+  }
+
+  .dash-modal-container {
+    width: 95% !important;
+    margin: 10px auto !important;
+    padding: 16px !important;
+  }
+}
+
 @media print {
   @page {
     margin: 0;

@@ -204,6 +204,102 @@ $is_valid = true;
             padding: 16px 20px;
             margin-bottom: 24px;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px 10px;
+            }
+            .verify-card {
+                border-radius: 12px;
+            }
+            .verify-top-bar {
+                padding: 18px 16px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+            }
+            .verify-top-bar > div:first-child {
+                width: 100%;
+            }
+            .verify-badge {
+                align-self: flex-start;
+                font-size: 11px;
+                padding: 5px 12px;
+                white-space: nowrap;
+            }
+            .verify-body {
+                padding: 18px 14px;
+            }
+            .status-hero {
+                padding: 16px 12px;
+                margin-bottom: 18px;
+            }
+            .status-hero h2 {
+                font-size: 17px;
+                line-height: 1.3;
+            }
+            .status-hero p {
+                font-size: 12.5px;
+                line-height: 1.5;
+            }
+            .seal-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 14px 12px;
+                margin-bottom: 18px;
+            }
+            .seal-row > div {
+                text-align: left !important;
+                width: 100%;
+            }
+            .data-table, .data-table tbody, .data-table tr, .data-table th, .data-table td {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .data-table tr {
+                padding: 10px 0;
+                border-bottom: 1px solid var(--border);
+            }
+            .data-table tr:last-child {
+                border-bottom: none;
+            }
+            .data-table th {
+                background: transparent !important;
+                padding: 2px 0 4px !important;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: #64748b;
+                font-weight: 700;
+                width: 100% !important;
+            }
+            .data-table td {
+                padding: 0 0 4px !important;
+                font-size: 13.5px;
+                line-height: 1.5;
+                width: 100% !important;
+            }
+            .hash-code {
+                font-size: 10.5px;
+                padding: 6px 8px;
+                word-break: break-all;
+            }
+            .actions {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 18px;
+                padding-top: 16px;
+            }
+            .actions .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>

@@ -839,10 +839,10 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                 </div>
 
                 <!-- Printable Formal PKS Document Paper -->
-                <div class="pks-document-paper" id="printablePksDoc" style="background:#ffffff; color:#0f172a; max-width:860px; margin:0 auto 30px; padding:44px 50px; border-radius:12px; border:1px solid #cbd5e1; box-shadow:0 8px 30px rgba(0,0,0,0.06); font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.8; position: relative;">
+                <div class="pks-document-paper" id="printablePksDoc">
                     
                     <!-- Kop Surat Resmi PT Data Lake Indonesia -->
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:18px; border-bottom:3px double #0f172a; margin-bottom:28px;">
+                    <div class="pks-kop-surat">
                         <div style="display:flex; align-items:center; gap:16px;">
                             <img src="/logo/DLI-logo-navy.png" alt="PT Data Lake Indonesia" style="height:48px;">
                             <div>
@@ -851,7 +851,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                                 <div style="font-size:11px; color:#64748b;">Revenue Tower Lt. 16, District 8 SCBD, Jl. Jend. Sudirman Kav. 52-53, Jakarta Selatan 11530</div>
                             </div>
                         </div>
-                        <div style="text-align:right; font-size:11px; color:#64748b; line-height:1.5;">
+                        <div class="pks-kop-contact">
                             <div><strong>Telp:</strong> (021) 5082-0800 / <?= e(get_wa_number()) ?></div>
                             <div><strong>Email:</strong> legal@datalake.id</div>
                             <div><strong>Web:</strong> www.datalakeindonesia.com</div>
@@ -1008,7 +1008,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                             Jakarta Selatan, 05 Februari 2025
                         </div>
 
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; text-align:center;">
+                        <div class="pks-signature-grid">
                             <!-- PIHAK PERTAMA -->
                             <div style="border:1px solid #cbd5e1; border-radius:10px; padding:20px 16px; background:#f8fafc; position:relative;">
                                 <div style="font-weight:800; font-size:13px; color:#64748b; text-transform:uppercase;">PIHAK PERTAMA</div>
@@ -1065,7 +1065,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                         </div>
 
                         <!-- Sudut Bawah Dokumen PKS: Cek Keaslian Dokumen Database -->
-                        <div style="margin-top:30px; padding-top:14px; border-top:1px dashed #cbd5e1; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                        <div class="pks-doc-footer">
                             <div style="font-size:11px; color:#64748b; line-height:1.5;">
                                 <div style="display:flex; align-items:center; gap:6px;">
                                     <span class="material-symbols-outlined" style="font-size:15px; color:#0284c7;">verified_user</span>
