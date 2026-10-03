@@ -1002,7 +1002,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                         </p>
                     </div>
 
-                    <!-- Penandatanganan & Barcode Tanda Tangan Resmi -->
+                    <!-- Penandatanganan & QR Code Tanda Tangan Resmi -->
                     <div style="margin-top:24px; padding-top:20px; border-top:1px solid #e2e8f0;">
                         <div style="text-align:right; font-size:13.5px; margin-bottom:20px; color:#475569;">
                             Jakarta Selatan, 15 Februari 2026
@@ -1019,71 +1019,21 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                                     E-METERAI 10000 DIGITAL PERURI #MTR-DLI-2026-08291
                                 </div>
 
-                                <!-- QR Code with Data Lake Logo in Center -->
-                                <div onclick="openModal('verifyDocModal')" style="cursor:pointer; display:inline-block; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:10px; box-shadow:0 4px 12px rgba(0,0,0,0.06); transition:transform 0.2s;" title="Klik untuk verifikasi keaslian dokumen di database">
-                                    <div style="position:relative; width:130px; height:130px; margin:0 auto;">
-                                        <!-- SVG QR Code Matrix -->
-                                        <svg viewBox="0 0 100 100" width="100%" height="100%" style="display:block;">
-                                            <rect width="100" height="100" fill="#ffffff" />
-                                            <!-- Corner Finders -->
-                                            <rect x="5" y="5" width="24" height="24" rx="3" fill="#07162c" />
-                                            <rect x="9" y="9" width="16" height="16" rx="2" fill="#ffffff" />
-                                            <rect x="13" y="13" width="8" height="8" rx="1" fill="#0284c7" />
-
-                                            <rect x="71" y="5" width="24" height="24" rx="3" fill="#07162c" />
-                                            <rect x="75" y="9" width="16" height="16" rx="2" fill="#ffffff" />
-                                            <rect x="79" y="13" width="8" height="8" rx="1" fill="#0284c7" />
-
-                                            <rect x="5" y="71" width="24" height="24" rx="3" fill="#07162c" />
-                                            <rect x="9" y="75" width="16" height="16" rx="2" fill="#ffffff" />
-                                            <rect x="13" y="79" width="8" height="8" rx="1" fill="#0284c7" />
-
-                                            <!-- QR modules simulated -->
-                                            <rect x="35" y="8" width="5" height="5" fill="#07162c" />
-                                            <rect x="45" y="8" width="5" height="5" fill="#07162c" />
-                                            <rect x="55" y="8" width="5" height="5" fill="#07162c" />
-                                            <rect x="35" y="18" width="5" height="5" fill="#07162c" />
-                                            <rect x="45" y="18" width="5" height="5" fill="#0284c7" />
-                                            <rect x="55" y="18" width="5" height="5" fill="#07162c" />
-                                            
-                                            <rect x="8" y="35" width="5" height="5" fill="#07162c" />
-                                            <rect x="18" y="35" width="5" height="5" fill="#07162c" />
-                                            <rect x="8" y="45" width="5" height="5" fill="#0284c7" />
-                                            <rect x="18" y="55" width="5" height="5" fill="#07162c" />
-                                            <rect x="8" y="55" width="5" height="5" fill="#07162c" />
-
-                                            <rect x="75" y="35" width="5" height="5" fill="#07162c" />
-                                            <rect x="85" y="35" width="5" height="5" fill="#07162c" />
-                                            <rect x="75" y="45" width="5" height="5" fill="#0284c7" />
-                                            <rect x="85" y="55" width="5" height="5" fill="#07162c" />
-
-                                            <rect x="35" y="75" width="5" height="5" fill="#07162c" />
-                                            <rect x="45" y="75" width="5" height="5" fill="#0284c7" />
-                                            <rect x="55" y="75" width="5" height="5" fill="#07162c" />
-                                            <rect x="35" y="85" width="5" height="5" fill="#07162c" />
-                                            <rect x="55" y="85" width="5" height="5" fill="#07162c" />
-
-                                            <rect x="75" y="75" width="5" height="5" fill="#07162c" />
-                                            <rect x="85" y="85" width="5" height="5" fill="#07162c" />
-                                        </svg>
-
-                                        <!-- Center Data Lake Logo Icon -->
-                                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:38px; height:38px; background:#ffffff; border-radius:50%; border:2px solid #0099cc; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.2); padding:3px;">
-                                            <img src="/logo/DLI-logo-navy.png" alt="DLI" style="width:100%; height:auto;">
+                                <!-- Real QR Code with Data Lake Logo in Center -->
+                                <div onclick="window.open('/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2026','_blank')" style="cursor:pointer; display:inline-block; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:transform 0.2s;" title="Scan QR / klik untuk verifikasi keaslian dokumen di database">
+                                    <div style="position:relative; width:120px; height:120px; margin:0 auto;">
+                                        <canvas id="qrcode-pihak1" style="width:120px;height:120px;"></canvas>
+                                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:26px; height:26px; background:#ffffff; border-radius:50%; border:1.5px solid #0099cc; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.18); padding:2px;">
+                                            <img src="/logo/DLI-logo-navy.png" alt="DLI" style="width:100%; height:auto; border-radius:50%;">
                                         </div>
                                     </div>
-
-                                    <!-- Barcode Lines Underneath -->
-                                    <div style="font-family:monospace; font-size:12px; color:#07162c; letter-spacing:2px; margin-top:6px; line-height:1;">
-                                        ||| | |||| | ||| |||| | || | |||| ||
-                                    </div>
-                                    <div style="font-size:9.5px; color:#0284c7; font-family:monospace; font-weight:700; margin-top:2px;">
-                                        *082/PKS/DLI-NIS/02/2026*
+                                    <div style="font-size:9px; color:#0284c7; font-family:monospace; font-weight:700; margin-top:4px; letter-spacing:0.5px;">
+                                        082/PKS/DLI-NIS/02/2026
                                     </div>
                                 </div>
 
                                 <div style="margin-top:8px;">
-                                    <a href="javascript:void(0)" onclick="openModal('verifyDocModal')" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
+                                    <a href="/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2026" target="_blank" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
                                         <span class="material-symbols-outlined" style="font-size:14px;">verified</span>
                                         Cek Keaslian Dokumen Database
                                     </a>
@@ -1107,71 +1057,21 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                                     E-METERAI 10000 DIGITAL PERURI #MTR-NIS-2026-04421
                                 </div>
 
-                                <!-- QR Code for Second Party with Logo -->
-                                <div onclick="openModal('verifyDocModal')" style="cursor:pointer; display:inline-block; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:10px; box-shadow:0 4px 12px rgba(0,0,0,0.06); transition:transform 0.2s;" title="Klik untuk verifikasi keaslian dokumen di database">
-                                    <div style="position:relative; width:130px; height:130px; margin:0 auto;">
-                                        <!-- SVG QR Code Matrix -->
-                                        <svg viewBox="0 0 100 100" width="100%" height="100%" style="display:block;">
-                                            <rect width="100" height="100" fill="#ffffff" />
-                                            <!-- Corner Finders -->
-                                            <rect x="5" y="5" width="24" height="24" rx="3" fill="#07162c" />
-                                            <rect x="9" y="9" width="16" height="16" rx="2" fill="#ffffff" />
-                                            <rect x="13" y="13" width="8" height="8" rx="1" fill="#059669" />
-
-                                            <rect x="71" y="5" width="24" height="24" rx="3" fill="#07162c" />
-                                            <rect x="75" y="9" width="16" height="16" rx="2" fill="#ffffff" />
-                                            <rect x="79" y="13" width="8" height="8" rx="1" fill="#059669" />
-
-                                            <rect x="5" y="71" width="24" height="24" rx="3" fill="#07162c" />
-                                            <rect x="9" y="75" width="16" height="16" rx="2" fill="#ffffff" />
-                                            <rect x="13" y="79" width="8" height="8" rx="1" fill="#059669" />
-
-                                            <!-- QR modules simulated -->
-                                            <rect x="35" y="8" width="5" height="5" fill="#07162c" />
-                                            <rect x="45" y="8" width="5" height="5" fill="#07162c" />
-                                            <rect x="55" y="8" width="5" height="5" fill="#07162c" />
-                                            <rect x="35" y="18" width="5" height="5" fill="#059669" />
-                                            <rect x="45" y="18" width="5" height="5" fill="#07162c" />
-                                            <rect x="55" y="18" width="5" height="5" fill="#07162c" />
-                                            
-                                            <rect x="8" y="35" width="5" height="5" fill="#07162c" />
-                                            <rect x="18" y="35" width="5" height="5" fill="#07162c" />
-                                            <rect x="8" y="45" width="5" height="5" fill="#059669" />
-                                            <rect x="18" y="55" width="5" height="5" fill="#07162c" />
-                                            <rect x="8" y="55" width="5" height="5" fill="#07162c" />
-
-                                            <rect x="75" y="35" width="5" height="5" fill="#07162c" />
-                                            <rect x="85" y="35" width="5" height="5" fill="#07162c" />
-                                            <rect x="75" y="45" width="5" height="5" fill="#059669" />
-                                            <rect x="85" y="55" width="5" height="5" fill="#07162c" />
-
-                                            <rect x="35" y="75" width="5" height="5" fill="#07162c" />
-                                            <rect x="45" y="75" width="5" height="5" fill="#07162c" />
-                                            <rect x="55" y="75" width="5" height="5" fill="#059669" />
-                                            <rect x="35" y="85" width="5" height="5" fill="#07162c" />
-                                            <rect x="55" y="85" width="5" height="5" fill="#07162c" />
-
-                                            <rect x="75" y="75" width="5" height="5" fill="#07162c" />
-                                            <rect x="85" y="85" width="5" height="5" fill="#07162c" />
-                                        </svg>
-
-                                        <!-- Center Badge -->
-                                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:38px; height:38px; background:#ffffff; border-radius:50%; border:2px solid #059669; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.2); font-weight:800; font-size:11px; color:#047857;">
-                                            NIS
+                                <!-- Real QR Code PIHAK KEDUA with DLI Logo in Center -->
+                                <div onclick="window.open('/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2026','_blank')" style="cursor:pointer; display:inline-block; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:transform 0.2s;" title="Scan QR / klik untuk verifikasi keaslian dokumen di database">
+                                    <div style="position:relative; width:120px; height:120px; margin:0 auto;">
+                                        <canvas id="qrcode-pihak2" style="width:120px;height:120px;"></canvas>
+                                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:26px; height:26px; background:#ffffff; border-radius:50%; border:1.5px solid #059669; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.18); padding:2px;">
+                                            <img src="/logo/DLI-logo-navy.png" alt="DLI" style="width:100%; height:auto; border-radius:50%;">
                                         </div>
                                     </div>
-
-                                    <!-- Barcode Lines Underneath -->
-                                    <div style="font-family:monospace; font-size:12px; color:#07162c; letter-spacing:2px; margin-top:6px; line-height:1;">
-                                        |||| | ||| || | |||| ||| | || |||| |
-                                    </div>
-                                    <div style="font-size:9.5px; color:#059669; font-family:monospace; font-weight:700; margin-top:2px;">
-                                        *NIS-DIR-SIGN-082-2026*
+                                    <div style="font-size:9px; color:#059669; font-family:monospace; font-weight:700; margin-top:4px; letter-spacing:0.5px;">
+                                        082/PKS/DLI-NIS/02/2026
                                     </div>
                                 </div>
 
                                 <div style="margin-top:8px;">
-                                    <a href="javascript:void(0)" onclick="openModal('verifyDocModal')" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
+                                    <a href="/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2026" target="_blank" style="font-size:11px; color:#047857; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; padding:3px 8px; border-radius:4px; border:1px solid #a7f3d0;">
                                         <span class="material-symbols-outlined" style="font-size:14px;">verified</span>
                                         Cek Keaslian Dokumen Database
                                     </a>
@@ -1881,6 +1781,9 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
         </div>
     </div>
 
+    <!-- QR Code Library (qrcodejs - browser native) -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
     <!-- Scripts -->
     <script>
     function toggleSidebar() {
@@ -2035,6 +1938,42 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
         const chartAvgU = document.getElementById('chartAvgUp');
         if (chartAvgU) chartAvgU.innerText = 'Upload (Avg: ' + avgU + ' Mbps)';
     }, 2500);
+    </script>
+
+    <!-- Generate Real Scannable QR Codes for PKS Document Signature Section -->
+    <script>
+    (function generatePKSQRCodes() {
+        // Verification URL encoded in the QR code - opens public audit page
+        var verifyUrl = window.location.protocol + '//' + window.location.host + '/verify-doc.php?doc=082%2FPKS%2FDLI-NIS%2F02%2F2026';
+
+        if (typeof QRCode === 'undefined') {
+            console.warn('QRCode library not loaded');
+            return;
+        }
+
+        var ids = ['qrcode-pihak1', 'qrcode-pihak2'];
+        ids.forEach(function(id) {
+            var canvas = document.getElementById(id);
+            if (!canvas) return;
+
+            // Replace canvas with a div - qrcodejs creates canvas inside a div
+            var wrapper = canvas.parentNode;
+            var newDiv = document.createElement('div');
+            newDiv.id = id + '-wrapper';
+            newDiv.style.cssText = 'width:120px;height:120px;display:inline-block;';
+            wrapper.insertBefore(newDiv, canvas);
+            canvas.style.display = 'none';
+
+            new QRCode(newDiv, {
+                text: verifyUrl,
+                width: 120,
+                height: 120,
+                colorDark: '#07162c',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        });
+    })();
     </script>
 </body>
 </html>
