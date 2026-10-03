@@ -22,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $pdo = get_db_connection();
         // Allow login by either username or email
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE (username = :input OR email = :input) LIMIT 1");
-        $stmt->execute([':input' => $login_input]);
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) LIMIT 1");
+        $stmt->execute([$login_input, $login_input]);
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['password'])) {
