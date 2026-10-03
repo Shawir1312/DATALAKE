@@ -48,9 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inquiry'])) {
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://datalakeindonesia.com/">
     
-    <!-- Google Search Console Verification (Ganti kode verifikasi jika ada dari Search Console) -->
-    <!-- Contoh: <meta name="google-site-verification" content="KODE_VERIFIKASI_GOOGLE_ANDA"> -->
-    <meta name="google-site-verification" content="gsc_datalake_indonesia_verification">
+    <!-- Google Search Console Official Verification -->
+    <meta name="google-site-verification" content="o8fFW2wljic6fEyNenne2ct8r0NuYPVgor4enKW0qWE">
     
     <!-- Geo Meta Tags for Indonesian Local Search SEO -->
     <meta name="geo.region" content="ID-JK">
