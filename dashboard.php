@@ -379,7 +379,7 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
             <div class="dash-topbar-actions">
                 <div class="system-status-indicator">
                     <span class="status-dot"></span>
-                    <span>Sistem Terhubung (<?= strtoupper(DB_TYPE) ?>)</span>
+                    <span>Sistem Terhubung (<?= (DB_TYPE === 'mysql') ? 'MySQL / phpMyAdmin' : 'SQLite' ?>)</span>
                 </div>
                 <a href="/" class="btn-view-site" target="_blank">
                     <span class="material-symbols-outlined" style="font-size: 16px;">public</span>

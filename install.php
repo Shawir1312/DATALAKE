@@ -577,38 +577,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install']) && !$i
 
                 <form action="install.php" method="POST" id="installForm" class="auth-form">
                     <input type="hidden" name="run_install" value="1">
-                    <input type="hidden" name="db_type" id="db_type_input" value="sqlite">
+                    <input type="hidden" name="db_type" id="db_type_input" value="mysql">
 
                     <!-- Section: Database Type Selection -->
                     <div class="section-separator">
                         <span class="material-symbols-outlined" style="font-size: 18px;">database</span>
-                        1. Pilihan Mesin Database
+                        1. Pilihan Mesin Database (MySQL / phpMyAdmin)
                     </div>
 
                     <div class="db-selector">
-                        <div class="db-tab-btn active" id="tab_sqlite" onclick="selectDbType('sqlite')">
+                        <div class="db-tab-btn active" id="tab_mysql" onclick="selectDbType('mysql')">
                             <div class="db-tab-title">
-                                <span class="material-symbols-outlined" style="font-size: 18px; color: var(--color-tertiary);">bolt</span>
-                                SQLite (1-Klik Cepat)
+                                <span class="material-symbols-outlined" style="font-size: 18px; color: #60a5fa;">dns</span>
+                                MySQL / phpMyAdmin (Rekomendasi Server)
                             </div>
                             <div class="db-tab-desc">
-                                Paling mudah! Tanpa perlu buat database manual di cPanel. Otomatis dibuat di file lokal.
+                                Terhubung langsung ke database MySQL / phpMyAdmin di aaPanel / cPanel server Anda.
                             </div>
                         </div>
 
-                        <div class="db-tab-btn" id="tab_mysql" onclick="selectDbType('mysql')">
+                        <div class="db-tab-btn" id="tab_sqlite" onclick="selectDbType('sqlite')">
                             <div class="db-tab-title">
-                                <span class="material-symbols-outlined" style="font-size: 18px; color: #60a5fa;">dns</span>
-                                MySQL / MariaDB
+                                <span class="material-symbols-outlined" style="font-size: 18px; color: var(--color-tertiary);">bolt</span>
+                                SQLite (File Lokal Standalone)
                             </div>
                             <div class="db-tab-desc">
-                                Cocok untuk hosting cPanel, phpMyAdmin, XAMPP, atau database server terpisah.
+                                Menggunakan file lokal SQLite tanpa perlu database server.
                             </div>
                         </div>
                     </div>
 
-                    <!-- MySQL Config Panel (Hidden by default) -->
-                    <div id="mysql_fields" style="display: none; background: rgba(0,0,0,0.2); padding: 16px; border-radius: var(--radius-md); margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.08);">
+                    <!-- MySQL Config Panel (Visible by default) -->
+                    <div id="mysql_fields" style="display: block; background: rgba(0,0,0,0.2); padding: 16px; border-radius: var(--radius-md); margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.08);">
                         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;">
                             <div class="form-group">
                                 <label class="form-label">Database Host</label>

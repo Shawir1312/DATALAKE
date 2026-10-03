@@ -10,8 +10,8 @@ if (file_exists(__DIR__ . '/config.php')) {
     require_once __DIR__ . '/config.php';
 }
 
-// Default Configuration Fallbacks
-if (!defined('DB_TYPE')) define('DB_TYPE', 'sqlite'); // 'sqlite' or 'mysql'
+// Default Configuration Fallbacks (MySQL / phpMyAdmin by default)
+if (!defined('DB_TYPE')) define('DB_TYPE', 'mysql'); // 'mysql' or 'sqlite'
 if (!defined('DB_HOST')) define('DB_HOST', '127.0.0.1');
 if (!defined('DB_PORT')) define('DB_PORT', '3306');
 if (!defined('DB_NAME')) define('DB_NAME', 'datalake_db');
@@ -49,23 +49,40 @@ function get_db_connection() {
         init_db_tables($pdo);
 
     } catch (PDOException $e) {
-        // Fallback to SQLite if MySQL fails and was selected
         if (DB_TYPE === 'mysql') {
-            try {
-                $db_dir = __DIR__ . '/../database';
-                if (!is_dir($db_dir)) {
-                    mkdir($db_dir, 0755, true);
-                }
-                $db_path = $db_dir . '/datalake.sqlite';
-                $pdo = new PDO("sqlite:" . $db_path);
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-                $pdo->exec("PRAGMA foreign_keys = ON;");
-                init_db_tables($pdo);
-                return $pdo;
-            } catch (Exception $fallback_e) {
-                die("Database Error (MySQL failed, SQLite fallback failed): " . htmlspecialchars($fallback_e->getMessage()));
-            }
+            die("
+                <div style='font-family:-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif; max-width:640px; margin:60px auto; padding:28px; background:#fff; border-radius:14px; box-shadow:0 12px 35px rgba(0,0,0,0.1); border:1px solid #fee2e2;'>
+                    <div style='display:flex; align-items:center; gap:12px; margin-bottom:16px;'>
+                        <div style='width:40px; height:40px; border-radius:50%; background:#fef2f2; color:#dc2626; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:bold;'>!</div>
+                        <h2 style='color:#b91c1c; margin:0; font-size:20px;'>Gagal Terhubung ke Database MySQL (phpMyAdmin)</h2>
+                    </div>
+                    <p style='color:#475569; font-size:14px; line-height:1.6;'>
+                        Aplikasi dikonfigurasi untuk menggunakan <strong>MySQL (phpMyAdmin)</strong>, namun server belum berhasil tersambung dengan parameter berikut:
+                    </p>
+                    <div style='background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px 16px; font-family:monospace; font-size:13px; color:#334155; margin-bottom:16px;'>
+                        Host: <strong>" . htmlspecialchars(DB_HOST) . ":" . htmlspecialchars(DB_PORT) . "</strong><br>
+                        Database: <strong>" . htmlspecialchars(DB_NAME) . "</strong><br>
+                        User: <strong>" . htmlspecialchars(DB_USER) . "</strong>
+                    </div>
+                    <div style='background:#fff1f2; border:1px solid #fecdd3; border-radius:8px; padding:10px 14px; font-size:12.5px; color:#9f1239; margin-bottom:20px;'>
+                        <strong>Pesan Error MySQL:</strong> " . htmlspecialchars($e->getMessage()) . "
+                    </div>
+                    <h4 style='color:#0f172a; margin:0 0 10px; font-size:14px;'>Cara Mengatasinya:</h4>
+                    <ol style='color:#475569; font-size:13.5px; line-height:1.8; padding-left:20px; margin:0 0 20px;'>
+                        <li>Buka <strong>phpMyAdmin</strong> di panel hosting/server Anda.</li>
+                        <li>Pastikan database <code>" . htmlspecialchars(DB_NAME) . "</code> sudah dibuat (atau import file <code>database/schema.sql</code>).</li>
+                        <li>Sesuaikan username & password database di file <code>config/config.php</code> atau jalankan Web Installer di bawah ini.</li>
+                    </ol>
+                    <div style='display:flex; gap:10px;'>
+                        <a href='/install.php?force_unlock=1' style='background:#0284c7; color:#fff; text-decoration:none; padding:10px 18px; border-radius:8px; font-weight:600; font-size:13.5px; display:inline-block;'>
+                            Buka Web Installer MySQL &rarr;
+                        </a>
+                        <a href='javascript:location.reload()' style='background:#f1f5f9; color:#334155; text-decoration:none; padding:10px 18px; border-radius:8px; font-weight:600; font-size:13.5px; display:inline-block;'>
+                            Coba Ulang Koneksi
+                        </a>
+                    </div>
+                </div>
+            ");
         }
         die("Database Connection Error: " . htmlspecialchars($e->getMessage()));
     }
