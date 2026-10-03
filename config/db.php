@@ -214,3 +214,52 @@ function init_db_tables(PDO $pdo) {
         ]);
     }
 }
+
+/**
+ * Site Settings & Contact Helpers
+ */
+function get_site_setting($key, $default = '') {
+    try {
+        $pdo = get_db_connection();
+        $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $col = ($driver === 'sqlite') ? "key" : "`key`";
+        $stmt = $pdo->prepare("SELECT val FROM site_settings WHERE $col = ? LIMIT 1");
+        $stmt->execute([$key]);
+        $val = $stmt->fetchColumn();
+        return ($val !== false && $val !== null && $val !== '') ? $val : $default;
+    } catch (Exception $e) {
+        return $default;
+    }
+}
+
+function set_site_setting($key, $value) {
+    try {
+        $pdo = get_db_connection();
+        $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($driver === 'sqlite') {
+            $stmt = $pdo->prepare("INSERT INTO site_settings (key, val) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET val = excluded.val");
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO site_settings (`key`, `val`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `val` = VALUES(`val`)");
+        }
+        return $stmt->execute([$key, $value]);
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+function get_wa_number() {
+    if (defined('WA_PHONE') && WA_PHONE !== '') {
+        return WA_PHONE;
+    }
+    return get_site_setting('wa_number', '08170117800');
+}
+
+function get_wa_url($message = '') {
+    $phone = preg_replace('/[^0-9]/', '', get_wa_number());
+    if (substr($phone, 0, 1) === '0') {
+        $phone = '62' . substr($phone, 1);
+    } elseif (substr($phone, 0, 2) !== '62') {
+        $phone = '62' . $phone;
+    }
+    return "https://api.whatsapp.com/send?phone=" . $phone . ($message !== '' ? "&text=" . urlencode($message) : '');
+}

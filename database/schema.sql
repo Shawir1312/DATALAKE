@@ -51,3 +51,10 @@ CREATE TABLE IF NOT EXISTS `site_settings` (
 INSERT INTO `users` (`name`, `username`, `email`, `phone`, `password`, `role`, `status`) 
 VALUES ('Administrator Data Lake', 'admin', 'admin@datalake.id', '08170117800', '$2y$10$wEkgz/e8WpL4gR6pmsLrqeSZZz5J7hY4k7Wb0pM6v3Rj7s8XqX4e.', 'admin', 'active')
 ON DUPLICATE KEY UPDATE `username` = `username`;
+
+-- Default Site Settings
+INSERT INTO `site_settings` (`key`, `val`) VALUES 
+('wa_number', '08170117800'),
+('store_title', 'Data Lake Official Store')
+ON DUPLICATE KEY UPDATE `val` = VALUES(`val`);
+

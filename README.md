@@ -15,7 +15,9 @@ Dilengkapi dengan wizard instalasi otomatis web (**`install.php`**) untuk kemuda
 - **Hero & Feature Sections**: Banner peta jaringan Starlink Indonesia, kartu produk *Starlink Kit Gen 3 V4* dan *Starlink Mini / Aksesoris*.
 - **Keunggulan & Split Cards**: 2 featured card (*Layanan Terkelola*, *Dukungan Lokal*) dan 4 supporting card (*Dashboard Pelanggan*, *Mitra Garansi*, *Penagihan IDR*, *Cakupan Nasional*).
 - **10 Mitra Distributor Retail**: Grid logo resmi Apollo Gadget, Erafone, Electronic City, Hartono, Hypermart, Urban Republic, dll.
-- **Floating WhatsApp FAB**: Tombol konsultasi WhatsApp langsung ke CS resmi.
+- **Official Web Store Mandiri (`store.php`)**: Toko online resmi Starlink bawaan mandiri dengan katalog produk lengkap (Starlink Standard Gen 3, Starlink Mini, Wi-Fi 6 Router, Ethernet Adapter, Pivot Mount, Pipe Adapter), formulir pemesanan instan, dan integrasi WhatsApp ke admin tanpa ketergantungan atau komunikasi ke website eksternal.
+- **Pengaturan WhatsApp & Kontak Mandiri**: Seluruh tautan WhatsApp dan nomor telepon CS/Sales diatur dinamis via database dan dapat diubah kapan saja langsung melalui Dashboard Admin (Tab Profil) dalam 1 klik.
+- **Floating WhatsApp FAB**: Tombol konsultasi WhatsApp dinamis langsung ke kontak admin yang ditentukan.
 - **Formulir Konsultasi Interaktif**: Pengunjung dapat mengajukan permintaan paket dan tersimpan otomatis ke database.
 
 ### 2. Sistem Autentikasi & Keamanan (Full PHP)

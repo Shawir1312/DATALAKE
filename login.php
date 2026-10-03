@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <div class="form-row-between">
                     <label for="password" class="form-label">Kata Sandi</label>
-                    <a href="https://api.whatsapp.com/send?phone=628170117800&text=Halo%20Data%20Lake%2C%20saya%20lupa%20kata%20sandi%20akun%20saya" target="_blank" class="auth-link" style="font-size: 12px;">Lupa Sandi?</a>
+                    <a href="<?= htmlspecialchars(get_wa_url('Halo Admin Data Lake, saya lupa kata sandi akun saya')) ?>" target="_blank" class="auth-link" style="font-size: 12px;">Lupa Sandi?</a>
                 </div>
                 <div class="input-wrapper">
                     <span class="material-symbols-outlined input-icon">lock</span>

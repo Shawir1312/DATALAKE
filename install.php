@@ -232,19 +232,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install']) && !$i
             $ins->execute([$admin_name, $admin_user, $admin_email, $admin_phone, $hashed_pass]);
 
             // Seed sample inquiries if empty
-            $countInq = (int)$pdo->query("SELECT COUNT(*) FROM inquiries")->fetchColumn();
-            if ($countInq === 0) {
-                $seedInquiry = $pdo->prepare("INSERT INTO inquiries (name, email, phone, service_package, location, message, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $seedInquiry->execute([
-                    'Budi Pratama',
-                    'budi@pratamatech.co.id',
-                    '081298765432',
-                    'Starlink Standard Gen 3',
-                    'Jakarta Selatan',
-                    'Mohon penawaran harga paket pemasangan resmi.',
-                    'new'
-                ]);
+            // Seed site_settings (WhatsApp & Store Title)
+            if ($driver === 'sqlite') {
+                $seedSettings = $pdo->prepare("INSERT OR REPLACE INTO site_settings (key, val) VALUES (?, ?)");
+            } else {
+                $seedSettings = $pdo->prepare("INSERT INTO site_settings (`key`, `val`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `val` = VALUES(`val`)");
             }
+            $seedSettings->execute(['wa_number', !empty($admin_phone) ? $admin_phone : '08170117800']);
+            $seedSettings->execute(['store_title', 'Data Lake Official Store']);
+
 
             // Write config/config.php
             $config_dir = __DIR__ . '/config';

@@ -171,6 +171,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: dashboard.php?tab=profile");
         exit;
     }
+
+    // Admin-only: Update WhatsApp and Store Settings
+    if ($action === 'update_contact_settings') {
+        if (!$is_admin) {
+            set_flash('error', 'Akses ditolak.');
+        } else {
+            $wa_number = trim($_POST['wa_number'] ?? '');
+            $site_title = trim($_POST['site_title'] ?? '');
+            if (!empty($wa_number)) {
+                set_site_setting('wa_number', $wa_number);
+            }
+            if (!empty($site_title)) {
+                set_site_setting('site_title', $site_title);
+            }
+            log_activity('Update Store Settings', "Mengubah kontak WhatsApp toko ke $wa_number");
+            set_flash('success', 'Pengaturan kontak WhatsApp & Store berhasil disimpan!');
+        }
+        header("Location: dashboard.php?tab=profile");
+        exit;
+    }
 }
 
 // Fetch stats
@@ -696,6 +716,46 @@ $logsList = $pdo->query("SELECT l.*, u.username FROM activity_logs l LEFT JOIN u
                             </form>
                         </div>
                     </div>
+
+                    <?php if ($is_admin): ?>
+                    <!-- WhatsApp & Store Settings (Admin Only) -->
+                    <div class="dash-card" style="grid-column: 1 / -1;">
+                        <div class="dash-card-header">
+                            <h2 class="dash-card-title">
+                                <span class="material-symbols-outlined" style="color: #25d366;">chat</span>
+                                Pengaturan WhatsApp Resmi &amp; Web Store
+                            </h2>
+                        </div>
+                        <div class="dash-card-body">
+                            <p style="font-size: 13.5px; color: #64748b; margin-bottom: 20px;">
+                                Nomor WhatsApp yang diisi di sini akan otomatis diterapkan ke seluruh tombol chat WhatsApp di Landing Page, Web Store, dan Login tanpa perlu mengubah kode.
+                            </p>
+                            <form method="POST">
+                                <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
+                                <input type="hidden" name="action" value="update_contact_settings">
+
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                                    <div class="form-group">
+                                        <label class="form-label" style="color: #334155;">Nomor WhatsApp Resmi (CS / Sales)</label>
+                                        <input type="text" name="wa_number" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" 
+                                               value="<?= e(get_wa_number()) ?>" placeholder="08170117800 atau 628170117800" required>
+                                        <small style="color: #64748b;">Format bebas: 0812xxx atau 62812xxx (sistem otomatis memformat ke link WA)</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" style="color: #334155;">Nama Brand / Judul Website</label>
+                                        <input type="text" name="site_title" class="form-input" style="color:#0f172a; border-color:#cbd5e1; padding-left:14px;" 
+                                               value="<?= e(get_site_setting('site_title', 'PT Data Lake Indonesia')) ?>" placeholder="PT Data Lake Indonesia">
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn-dash btn-dash-primary">
+                                    Simpan Pengaturan WhatsApp &amp; Toko
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>
