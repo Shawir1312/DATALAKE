@@ -300,6 +300,136 @@ $is_valid = true;
                 font-size: 13px;
             }
         }
+
+        .verify-logo {
+            height: 38px;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Print Styles: Make logo and validation receipt 100% visible on white paper */
+        @media print {
+            @page {
+                margin: 8mm 12mm;
+                size: auto;
+            }
+
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                color: #0f172a !important;
+            }
+
+            .verify-card {
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+                border-radius: 8px !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+            .verify-top-bar {
+                background: #ffffff !important;
+                border-bottom: 2px solid #0099cc !important;
+                padding: 16px 20px !important;
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Restore the original navy logo on white paper */
+            .verify-logo {
+                filter: none !important;
+                height: 40px !important;
+            }
+
+            .verify-subtitle {
+                color: #475569 !important;
+            }
+
+            .verify-badge {
+                background: #ecfdf5 !important;
+                border: 1px solid #10b981 !important;
+                color: #047857 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .verify-body {
+                padding: 22px 26px !important;
+            }
+
+            .status-hero {
+                border: 1px solid #a7f3d0 !important;
+                background: #f0fdf4 !important;
+                margin-bottom: 18px !important;
+                padding: 14px 16px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .status-hero h2 {
+                color: #065f46 !important;
+                font-size: 18px !important;
+            }
+
+            .status-hero p {
+                color: #047857 !important;
+                font-size: 13px !important;
+            }
+
+            .seal-row {
+                border: 1px solid #e2e8f0 !important;
+                background: #f8fafc !important;
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                margin-bottom: 16px !important;
+                padding: 12px 16px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .seal-row > div:last-child {
+                text-align: right !important;
+            }
+
+            .data-table {
+                display: table !important;
+                width: 100% !important;
+                margin-bottom: 0 !important;
+            }
+            .data-table tbody {
+                display: table-row-group !important;
+            }
+            .data-table tr {
+                display: table-row !important;
+                border-bottom: 1px solid #e2e8f0 !important;
+            }
+            .data-table th, .data-table td {
+                display: table-cell !important;
+                padding: 8px 12px !important;
+                font-size: 12.5px !important;
+            }
+            .data-table th {
+                background: #f8fafc !important;
+                color: #475569 !important;
+                width: 36% !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .data-table td {
+                color: #0f172a !important;
+            }
+
+            /* Hide buttons during print */
+            .actions, .no-print {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -307,8 +437,8 @@ $is_valid = true;
     <div class="verify-card">
         <div class="verify-top-bar">
             <div>
-                <img src="/logo/DLI-logo-navy.png" alt="Data Lake Indonesia" style="height: 38px; filter: brightness(0) invert(1);">
-                <div style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">Sistem Validasi Integritas Dokumen &amp; Tanda Tangan Digital</div>
+                <img src="/logo/DLI-logo-navy.png" alt="Data Lake Indonesia" class="verify-logo">
+                <div class="verify-subtitle" style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">Sistem Validasi Integritas Dokumen &amp; Tanda Tangan Digital</div>
             </div>
             <div class="verify-badge">
                 <span class="material-symbols-outlined" style="font-size: 18px;">verified</span>
