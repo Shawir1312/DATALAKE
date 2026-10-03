@@ -15,6 +15,10 @@ $is_valid = true;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi Keaslian Dokumen PKS | PT Data Lake Indonesia</title>
+    <meta name="description" content="Layanan resmi verifikasi keaslian dokumen Perjanjian Kerja Sama (PKS) dan integritas tanda tangan digital PT Data Lake Indonesia.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://datalakeindonesia.com/verify-doc.php">
+    
     <link rel="icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 

@@ -1,0 +1,22 @@
+# robots.txt for https://datalakeindonesia.com
+# Googlebot & Search Engine Crawlers
+
+User-agent: *
+Allow: /
+Allow: /store.php
+Allow: /verify-doc.php
+Allow: /login.php
+Allow: /assets/
+Allow: /logo/
+
+# Protect sensitive server and configuration files
+Disallow: /config/
+Disallow: /database/
+Disallow: /includes/
+Disallow: /scratch/
+Disallow: /install.php
+Disallow: /isntall.php
+Disallow: /dashboard.php
+
+# Sitemap location for Google Search Console
+Sitemap: https://datalakeindonesia.com/sitemap.xml

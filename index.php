@@ -40,20 +40,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inquiry'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Data Lake adalah Authorized Distributor Starlink di Indonesia. Beli, pasang, dan berlangganan Starlink dengan garansi resmi, dukungan lokal, dan pengiriman ke seluruh Indonesia">
-    <meta name="robots" content="index,follow,max-image-preview:large">
-    <link rel="canonical" href="/">
+    <title>PT Data Lake Indonesia | Authorized Distributor &amp; Reseller Starlink Indonesia</title>
     
-    <!-- Open Graph -->
+    <meta name="description" content="PT Data Lake Indonesia adalah Authorized Distributor resmi Starlink di Indonesia. Solusi internet satelit enterprise, dedicated bandwidth, perangkat resmi bergaransi, dan dukungan NOC 24/7 di seluruh Indonesia.">
+    <meta name="keywords" content="PT Data Lake Indonesia, Data Lake Indonesia, Starlink Indonesia, Distributor Starlink Indonesia, Reseller Starlink Indonesia, Internet Satelit Morotai, Starlink Enterprise, Nike P. Kosasih, Beli Starlink Resmi">
+    <meta name="author" content="PT Data Lake Indonesia">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://datalakeindonesia.com/">
+    
+    <!-- Google Search Console Verification (Ganti kode verifikasi jika ada dari Search Console) -->
+    <!-- Contoh: <meta name="google-site-verification" content="KODE_VERIFIKASI_GOOGLE_ANDA"> -->
+    <meta name="google-site-verification" content="gsc_datalake_indonesia_verification">
+    
+    <!-- Geo Meta Tags for Indonesian Local Search SEO -->
+    <meta name="geo.region" content="ID-JK">
+    <meta name="geo.placename" content="Jakarta Selatan">
+    <meta name="geo.position" content="-6.2297;106.8075">
+    <meta name="ICBM" content="-6.2297, 106.8075">
+
+    <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Data Lake Indonesia">
-    <meta property="og:title" content="Authorized Distributor Starlink Indonesia | Data Lake">
-    <meta property="og:description" content="Data Lake adalah Authorized Distributor Starlink di Indonesia. Beli, pasang, dan berlangganan Starlink dengan garansi resmi, dukungan lokal, dan pengiriman ke seluruh Indonesia">
-    <meta property="og:url" content="/">
-    <meta property="og:image" content="/og-default.png">
+    <meta property="og:site_name" content="PT Data Lake Indonesia">
+    <meta property="og:title" content="PT Data Lake Indonesia | Authorized Distributor Starlink">
+    <meta property="og:description" content="Authorized Distributor resmi Starlink di Indonesia. Layanan internet satelit dedicated enterprise dengan SLA 99.9% dan garansi resmi.">
+    <meta property="og:url" content="https://datalakeindonesia.com/">
+    <meta property="og:image" content="https://datalakeindonesia.com/og-default.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:locale" content="id_ID">
 
-    <title>Authorized Distributor Starlink Indonesia | Data Lake</title>
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PT Data Lake Indonesia | Authorized Distributor Starlink">
+    <meta name="twitter:description" content="Authorized Distributor resmi Starlink di Indonesia. Layanan internet satelit dedicated enterprise dengan garansi resmi.">
+    <meta name="twitter:image" content="https://datalakeindonesia.com/og-default.png">
+
+    <!-- Schema.org JSON-LD Structured Data for Google Rich Snippets & Knowledge Graph -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://datalakeindonesia.com/#organization",
+          "name": "PT Data Lake Indonesia",
+          "alternateName": ["Data Lake", "Data Lake Indonesia", "PT DLI"],
+          "url": "https://datalakeindonesia.com/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://datalakeindonesia.com/logo/DLI-logo-navy.png",
+            "caption": "PT Data Lake Indonesia"
+          },
+          "image": "https://datalakeindonesia.com/og-default.png",
+          "description": "Authorized Distributor dan Reseller Resmi Layanan Satelit Starlink di Indonesia untuk Bisnis, Enterprise, Maritim, dan Reseller.",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Revenue Tower Lantai 16, District 8 SCBD, Jl. Jend. Sudirman Kav. 52-53, Senayan",
+            "addressLocality": "Jakarta Selatan",
+            "addressRegion": "DKI Jakarta",
+            "postalCode": "11530",
+            "addressCountry": "ID"
+          },
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "telephone": "+62-21-5082-0800",
+              "contactType": "customer service",
+              "areaServed": "ID",
+              "availableLanguage": ["Indonesian", "English"]
+            },
+            {
+              "@type": "ContactPoint",
+              "telephone": "+62-817-0117-800",
+              "contactType": "sales",
+              "areaServed": "ID",
+              "availableLanguage": ["Indonesian", "English"]
+            }
+          ],
+          "founder": {
+            "@type": "Person",
+            "name": "Nike P. Kosasih",
+            "jobTitle": "Direktur Utama"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://datalakeindonesia.com/#website",
+          "url": "https://datalakeindonesia.com/",
+          "name": "PT Data Lake Indonesia",
+          "publisher": {
+            "@id": "https://datalakeindonesia.com/#organization"
+          },
+          "inLanguage": "id-ID"
+        }
+      ]
+    }
+    </script>
 
     <!-- Favicon & Touch Icons -->
     <link rel="icon" href="/favicon.ico">
